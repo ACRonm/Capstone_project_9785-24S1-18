@@ -1,4 +1,34 @@
 from tqdm import tqdm
+import urllib.request
+
+
+def unzip_file(filename):
+    import zipfile
+    print("Unzipping file...")
+    with zipfile.ZipFile(filename, 'r') as zip_ref:
+        zip_ref.extractall('./data')
+
+    # delete the zip file
+    import os
+    os.remove(filename)
+
+
+def download_file(url, filename):
+    import urllib.request
+    url = "https://f001.backblazeb2.com/file/alantgeo-public/au-nov2023.zip"
+    downloaded_filename = filename
+
+    # Download the file from `url` and save it locally under `file_name`:
+    # Use tqdm to show download progress
+    with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=downloaded_filename) as t:
+        def reporthook(blocknum, blocksize, totalsize):
+            t.total = totalsize
+            t.update(blocknum * blocksize - t.n)
+
+        urllib.request.urlretrieve(
+            url, downloaded_filename, reporthook=reporthook)
+
+    return downloaded_filename
 
 
 class Menu:
@@ -20,10 +50,8 @@ class Menu:
     def read_data(self):
         # Implement the logic for the "Read Data" option here
 
-        def unzip_file(filename):
-            import zipfile
-            with zipfile.ZipFile(filename, 'r') as zip_ref:
-                zip_ref.extractall('./data')
+        zip_file = './data/au-nov2023.zip'
+        url = "https://f001.backblazeb2.com/file/alantgeo-public/au-nov2023.zip"
 
         print("Read Data option selected")
         try:
@@ -33,29 +61,19 @@ class Menu:
             print("y/n")
             choice = input()
             if choice.lower() == 'y':
-                # download the file
+                # download the fil
                 print("Downloading file...")
-                try:
-                    unzip_file('./data/au-nov2023.zip')
-                except FileNotFoundError:
-                    print("File downloaded and unzipped.")
 
-                    import urllib.request
-                    url = "https://f001.backblazeb2.com/file/alantgeo-public/au-nov2023.zip"
-                    downloaded_filename = "./data/au-nov2023.zip"
+                with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=zip_file) as t:
+                    def reporthook(blocknum, blocksize, totalsize):
+                        t.total = totalsize
+                        t.update(blocknum * blocksize - t.n)
 
-                    # Download the file from `url` and save it locally under `file_name`:
-                    # Use tqdm to show download progress
-                    with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=downloaded_filename) as t:
+                    urllib.request.urlretrieve(
+                        url, zip_file, reporthook=reporthook)
 
-                        def reporthook(blocknum, blocksize, totalsize):
-                            t.total = totalsize
-                            t.update(blocknum * blocksize - t.n)
-
-                        urllib.request.urlretrieve(
-                            url, downloaded_filename, reporthook=reporthook)
-
-                    unzip_file(downloaded_filename)
+                unzip_file(zip_file)
+                print("File downloaded and unzipped.")
 
     def apply_entropy(self):
         # Implement the logic for the "Apply Entropy" option here
