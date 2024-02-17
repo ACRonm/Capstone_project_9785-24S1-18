@@ -1,9 +1,13 @@
 import csv
+import Menu
 
 
 def main():
     # Path to the data file
     data_file = './data/au.csv'
+
+    menu = Menu()
+    menu.run()
 
     fields = ['id', 'number', 'street', 'unit', 'lon',
               'lat', 'city', 'postcode', 'region', 'accuracy']
