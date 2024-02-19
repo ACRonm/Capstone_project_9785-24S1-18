@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import urllib.request
+import os
 
 
 def unzip_file(filename):
@@ -9,12 +10,12 @@ def unzip_file(filename):
         zip_ref.extractall('./data')
 
     # delete the zip file
-    import os
     os.remove(filename)
 
 
 def download_file(url, filename):
     import urllib.request
+
     url = "https://f001.backblazeb2.com/file/alantgeo-public/au-nov2023.zip"
     downloaded_filename = filename
 
@@ -61,7 +62,10 @@ class Menu:
             print("y/n")
             choice = input()
             if choice.lower() == 'y':
-                # download the fil
+
+                if not os.path.exists('./data'):
+                    os.makedirs('./data')
+
                 print("Downloading file...")
 
                 with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=zip_file) as t:
