@@ -6,7 +6,7 @@ import Menu
 def main():
     # Path to the data file
     data_file = './data/au.csv'
-
+    
     menu = Menu.Menu()
     menu.run()
 
