@@ -64,7 +64,7 @@ class Menu:
             os.system('cls' if os.name == 'nt' else 'clear')
 
             # print the name of the street with the highest match
-            print("Is your street", max(address_dicts[:10], key=lambda x: fuzz.ratio(street_name, x['street']))['street'], "?")
+            print("Is your street", max(address_dicts, key=lambda x: fuzz.ratio(street_name, x['street']))['street'], "?")
             
             
         except FileNotFoundError:
