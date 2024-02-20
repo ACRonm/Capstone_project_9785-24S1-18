@@ -60,6 +60,9 @@ class Menu:
             # fuzzy string match with the first 10 addresses
             street_name = input("Enter a street name: ").upper()
 
+            #clear the screen
+            os.system('cls' if os.name == 'nt' else 'clear')
+
             # print the name of the street with the highest match
             print("Is your street", max(address_dicts[:10], key=lambda x: fuzz.ratio(street_name, x['street']))['street'], "?")
             
