@@ -61,7 +61,6 @@ class Menu:
             print("y/n")
             choice = input()
             if choice.lower() == 'y':
-                # download the fil
                 print("Downloading file...")
 
                 with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=zip_file) as t:
