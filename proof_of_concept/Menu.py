@@ -1,10 +1,13 @@
+import csv
 from tqdm import tqdm
 import urllib.request
 import os
 import urllib.request
 import zipfile
 import random
+import Entropy
 from fuzzywuzzy import fuzz
+
 
 class Menu:
     def __init__(self):
@@ -37,39 +40,54 @@ class Menu:
             print("y/n")
             choice = input()
             if choice.lower() == 'y':
-                
+
                 download_file(url, zip_file)
 
-                unzip_file(zip_file)                
+                unzip_file(zip_file)
                 print("File downloaded and unzipped.")
-                
 
     def apply_entropy(self):
-        # Implement the logic for the "Apply Entropy" option here
-        print("Apply Entropy option selected")
+
+        entropy_rate = 0.2
+
+        try:
+            misspelt_addresses = load_into_memory('./data/au.csv')
+            print("Apply Entropy option selected")
+            print("Applying entropy to the addresses...")
+            for address in misspelt_addresses:
+                # print street names
+                print(address['street'])
+                if random.random() < entropy_rate:
+                    address['street'] = Entropy.simulate_typing_errors(
+                        address['street'])
+
+            # save as csv
+            with open('./data/au_misspelt.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["id", "number", "street", "unit", "lon",
+                                "lat", "city", "postcode", "region", "accuracy"])
+                for address in misspelt_addresses:
+                    writer.writerow([address['id'], address['number'], address['street'], address['unit'],
+                                    address['lon'], address['lat'], address['city'], address['postcode'], address['region'], address['accuracy']])
+        except FileNotFoundError:
+            self.read_data()
 
     def string_match(self):
         # Implement the logic for the "String Match" option here
         print("String Match option selected")
         try:
-            address_dicts =  load_into_memory('./data/au.csv')
-            #print the first 10 addresses without fields
-            for address_dict in address_dicts[:10]:
-                print(address_dict)
-                
-            # fuzzy string match with the first 10 addresses
-            street_name = input("Enter a street name: ").upper()
+            misspelt_address_dicts = load_into_memory('./data/au_misspelt.csv')
+            address_dicts = load_into_memory('./data/au.csv')
 
-            #clear the screen
-            os.system('cls' if os.name == 'nt' else 'clear')
+            misspelt_addresses = [address['street']
+                                  for address in misspelt_address_dicts]
+            addresses = [address['street'] for address in address_dicts]
 
-            # print the name of the street with the highest match
-            print("Is your street", max(address_dicts, key=lambda x: fuzz.ratio(street_name, x['street']))['street'], "?")
-            
-            
+            Entropy.string_match(misspelt_addresses, addresses)
+
         except FileNotFoundError:
-            self.read_data()
-        
+            self.apply_entropy()
+
     def exit_program(self):
         print("Exiting the program...")
         exit()
@@ -82,6 +100,7 @@ class Menu:
                 self.options[choice]()
             else:
                 print("Invalid choice. Please try again.")
+
 
 def unzip_file(filename):
     print("Unzipping file...")
@@ -96,9 +115,9 @@ def download_file(url, filename):
 
     url = "https://f001.backblazeb2.com/file/alantgeo-public/au-nov2023.zip"
     downloaded_filename = filename
-    
+
     print("Downloading file...")
-    
+
     if not os.path.exists('./data'):
         os.makedirs('./data')
 
@@ -114,23 +133,23 @@ def download_file(url, filename):
 
     return downloaded_filename
 
+
 def load_into_memory(filename):
     open_ratio = 0.1
-    
+
     fields = ['id', 'number', 'street', 'unit', 'lon',
               'lat', 'city', 'postcode', 'region', 'accuracy']
     addresses = []
-    
+
     with open(filename, 'r') as file:
         for line in file:
             if random.random() < open_ratio:
                 addresses.append(line)
 
             if len(addresses) > 999:
-                    break
-                
-    address_dicts = [dict(zip(fields, [value.strip() for value in address.split(',')])) for address in addresses]
-    
-    
-      
+                break
+
+    address_dicts = [dict(zip(fields, [value.strip()
+                          for value in address.split(',')])) for address in addresses]
+
     return address_dicts
