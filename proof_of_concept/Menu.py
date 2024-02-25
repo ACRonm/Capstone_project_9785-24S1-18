@@ -7,9 +7,11 @@ import zipfile
 import random
 import entropy
 from fuzzywuzzy import fuzz
+import address_class
 
 
 class Menu:
+
     def __init__(self):
         self.options = {
             "1": self.read_data,
@@ -54,15 +56,8 @@ class Menu:
             print("Apply Entropy option selected")
             print("Applying entropy to the addresses...")
             for address in misspelt_addresses:
-
-                if (address["street"].contains(street_types)):
-                    # replace ROAD with RD
-                    for i in range(len(street_types)):
-                        address["street"] = address["street"].replace(
-                            street_types[i], street_type_abbreviations[i])
-
-                # address['street'] = entropy.simulate_typing_errors(
-                #     address['street'])
+                address['street'] = entropy.simulate_typing_errors(
+                    address['street'])
 
             # save as csv
             with open('./data/au_misspelt.csv', 'w', newline='') as file:
@@ -70,8 +65,7 @@ class Menu:
                 writer.writerow(["id", "number", "street", "unit", "lon",
                                 "lat", "city", "postcode", "region", "accuracy"])
                 for address in misspelt_addresses:
-                    writer.writerow([address['id'], address['number'], address['street'], address['unit'],
-                                    address['lon'], address['lat'], address['city'], address['postcode'], address['region'], address['accuracy']])
+                    writer.writerow(address.values())
         except FileNotFoundError:
             self.read_data()
 
@@ -79,25 +73,27 @@ class Menu:
         # Implement the logic for the "String Match" option here
         print("String Match option selected")
         try:
-            misspelt_address_dicts = load_into_memory('./data/au_misspelt.csv')
-            address_dicts = load_into_memory('./data/au.csv')
+            misspelt_address_dict = load_into_memory('./data/au_misspelt.csv')
+            correct_address_dict = load_into_memory('./data/au.csv')
 
-            misspelt_addresses = [address['street']
-                                  for address in misspelt_address_dicts]
-            addresses = [address['street'] for address in address_dicts]
+            misspelt_streets = [address['street']
+                                for address in misspelt_address_dict]
 
-            entropy.string_match(misspelt_addresses, addresses)
+            correct_streets = [address['street']
+                               for address in correct_address_dict]
+
+            entropy.string_match(misspelt_streets, correct_streets)
 
         except FileNotFoundError:
             self.apply_entropy()
 
     def get_street_types(self, file='./data/au.csv'):
-
         load_into_memory(file)
         street_types = []
 
         with open(file, 'r') as file:
             for line in file:
+
                 street_types.append(line.split(',')[2].split(' ')[-1])
 
         unique_street_types = set(street_types)
@@ -152,21 +148,18 @@ def download_file(url, filename):
 
 
 def load_into_memory(filename):
-    open_ratio = 0.1
 
-    fields = ['id', 'number', 'street', 'unit', 'lon',
-              'lat', 'city', 'postcode', 'region', 'accuracy']
     addresses = []
-
     with open(filename, 'r') as file:
-        for line in file:
-            if random.random() < open_ratio:
-                addresses.append(line)
+        reader = csv.reader(file, delimiter=',')
+        # Skip the header
+        next(reader, None)
+        for row in reader:
+            address = address_class.Address(
+                row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+            addresses.append(address.__dict__)
 
-            if len(addresses) > 999:
+            if len(addresses) > 1000:
                 break
 
-    address_dicts = [dict(zip(fields, [value.strip()
-                          for value in address.split(',')])) for address in addresses]
-
-    return address_dicts
+    return addresses

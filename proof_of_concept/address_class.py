@@ -14,7 +14,12 @@ class Address:
     def get_full_address(self):
         return f"{self.unit} {self.number} {self.street}, {self.city}, {self.region}, {self.postcode}"
 
+    def set_id(self, id):
+        self.id = id
+
     # set the street attribute
+    def set_number(self, number):
+        self.number = number
 
     def set_street(self, street):
         self.street = street
@@ -26,3 +31,9 @@ class Address:
     # set the region attribute
     def set_region(self, region):
         self.region = region
+
+    def set_postcode(self, postcode):
+        self.postcode = postcode
+
+    def set_unit(self, unit):
+        self.unit = unit

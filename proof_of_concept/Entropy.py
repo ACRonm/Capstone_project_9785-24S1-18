@@ -32,6 +32,8 @@ def string_match(misspelt_addresses, addresses):
         corrected_addresses.append(closest_match)
         print("Confidence: ", fuzz.ratio(address, closest_match))
         print(f"Original: {address} -> Corrected: {closest_match}")
+
+        address = closest_match
         if address != closest_match:
             number_of_incorrect += 1
 
