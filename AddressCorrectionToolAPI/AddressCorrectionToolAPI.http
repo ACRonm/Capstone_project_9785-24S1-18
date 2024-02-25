@@ -1,0 +1,6 @@
+@AddressCorrectionToolAPI_HostAddress = http://localhost:5196
+
+GET {{AddressCorrectionToolAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
