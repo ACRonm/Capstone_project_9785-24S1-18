@@ -159,7 +159,7 @@ def load_into_memory(filename):
                 row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
             addresses.append(address.__dict__)
 
-            if len(addresses) > 1000:
+            if len(addresses) > 20000:
                 break
 
     return addresses

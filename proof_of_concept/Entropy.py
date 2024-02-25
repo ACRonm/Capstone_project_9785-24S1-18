@@ -1,6 +1,7 @@
 import random
 from fuzzywuzzy import fuzz
 import string
+from tqdm import tqdm
 
 
 def apply_entropy(addresses):
@@ -26,12 +27,9 @@ def string_match(misspelt_addresses, addresses):
     corrected_addresses = []
     number_of_incorrect = 0
 
-    for address in misspelt_addresses:
-        closest_match = max(
-            addresses, key=lambda x: fuzz.ratio(x, address))
+    for address in tqdm(misspelt_addresses, desc="Processing addresses"):
+        closest_match = max(addresses, key=lambda x: fuzz.ratio(x, address))
         corrected_addresses.append(closest_match)
-        print("Confidence: ", fuzz.ratio(address, closest_match))
-        print(f"Original: {address} -> Corrected: {closest_match}")
 
         address = closest_match
         if address != closest_match:
@@ -40,6 +38,12 @@ def string_match(misspelt_addresses, addresses):
     print("Number of addresses processed: ", len(addresses))
     print(f"Number of incorrect addresses: {number_of_incorrect}")
     print(f"Accuracy: {100 - (number_of_incorrect / len(addresses)) * 100}%")
+    if number_of_incorrect != 0:
+        print("Top ten incorrect addresses:")
+        for i in range(10):
+            print(misspelt_addresses[i], " -> ", corrected_addresses[i])
+
+    return corrected_addresses
 
 
 def simulate_typing_errors(address):
@@ -70,7 +74,7 @@ def simulate_typing_errors(address):
 
     # Choose a random operation to apply
     operations = [random_insertion, random_deletion,
-                  random_substitution, random_transposition]
+                  random_substitution, random_transposition, random_transposition]
 
     rand_operation = random.choice(operations)
 
