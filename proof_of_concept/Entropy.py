@@ -73,19 +73,3 @@ def simulate_typing_errors(address):
     rand_operation = random.choice(operations)
 
     return rand_operation(address)
-
-
-if __name__ == "__main__":
-    addresses = ["Fake", "Real", "Imaginary", "Nonexistent", "Fictional",
-                 "Fictitious", "Phantom", "Fanciful", "Mythical", "Legendary", "Mythological"]
-
-    misspelt_addresses = apply_entropy(addresses)
-
-    string_match(misspelt_addresses, addresses)
-
-    misspelt_addresses = []
-
-    for address in addresses:
-        misspelt_addresses.append(simulate_typing_errors(address))
-
-    string_match(misspelt_addresses, addresses)

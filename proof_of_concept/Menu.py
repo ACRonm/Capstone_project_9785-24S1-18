@@ -5,7 +5,7 @@ import os
 import urllib.request
 import zipfile
 import random
-import Entropy
+import entropy
 from fuzzywuzzy import fuzz
 
 
@@ -15,7 +15,8 @@ class Menu:
             "1": self.read_data,
             "2": self.apply_entropy,
             "3": self.string_match,
-            "4": self.exit_program
+            "4": self.exit_program,
+            "5": self.get_street_types
         }
 
     def display_menu(self):
@@ -48,18 +49,20 @@ class Menu:
 
     def apply_entropy(self):
 
-        entropy_rate = 0.2
-
         try:
             misspelt_addresses = load_into_memory('./data/au.csv')
             print("Apply Entropy option selected")
             print("Applying entropy to the addresses...")
             for address in misspelt_addresses:
-                # print street names
-                print(address['street'])
-                if random.random() < entropy_rate:
-                    address['street'] = Entropy.simulate_typing_errors(
-                        address['street'])
+
+                if (address["street"].contains(street_types)):
+                    # replace ROAD with RD
+                    for i in range(len(street_types)):
+                        address["street"] = address["street"].replace(
+                            street_types[i], street_type_abbreviations[i])
+
+                # address['street'] = entropy.simulate_typing_errors(
+                #     address['street'])
 
             # save as csv
             with open('./data/au_misspelt.csv', 'w', newline='') as file:
@@ -83,10 +86,24 @@ class Menu:
                                   for address in misspelt_address_dicts]
             addresses = [address['street'] for address in address_dicts]
 
-            Entropy.string_match(misspelt_addresses, addresses)
+            entropy.string_match(misspelt_addresses, addresses)
 
         except FileNotFoundError:
             self.apply_entropy()
+
+    def get_street_types(self, file='./data/au.csv'):
+
+        load_into_memory(file)
+        street_types = []
+
+        with open(file, 'r') as file:
+            for line in file:
+                street_types.append(line.split(',')[2].split(' ')[-1])
+
+        unique_street_types = set(street_types)
+        print(unique_street_types)
+
+        return unique_street_types
 
     def exit_program(self):
         print("Exiting the program...")
