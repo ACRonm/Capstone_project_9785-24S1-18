@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "l8GNiEnRpGtspXGtJJEfEUVgEnRQyTTVqnn0bWDV2es=",
+  "Hash": "LIPw39WJaD2t7fNVzW5LzupKgjcPdfYd/SrAo5VJUdQ=",
   "Source": "AddressCorrectionToolAPI",
   "BasePath": "_content/AddressCorrectionToolAPI",
   "Mode": "Default",
@@ -47,10 +47,10 @@
       "OriginalItemSpec": "C:\\Users\\aiden\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.2\\staticwebassets\\QuickGrid.razor.js"
     },
     {
-      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolAPI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AddressCorrectionToolAPI.styles.css",
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolApi\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AddressCorrectionToolAPI.styles.css",
       "SourceId": "AddressCorrectionToolAPI",
       "SourceType": "Computed",
-      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolAPI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolApi\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/AddressCorrectionToolAPI",
       "RelativePath": "AddressCorrectionToolAPI.styles.css",
       "AssetKind": "All",
@@ -63,7 +63,7 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolAPI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AddressCorrectionToolAPI.styles.css"
+      "OriginalItemSpec": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionToolApi\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AddressCorrectionToolAPI.styles.css"
     }
   ]
 }
