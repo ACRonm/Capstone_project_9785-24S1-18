@@ -11,13 +11,13 @@
 
 @attribute [Authorize]
 
+@inject HttpClient Http
+
 @page "/address-correction"
 
-<h3>AddressCorrection</h3>
+<PageTitle>Address Correction</PageTitle>
 
-<h3>Upload known-good addresses</h3>
-
-<p>Upload a CSV file containing known-good addresses.</p>
+<h3>Submit Address to be corrected</h3>
 
 <EditForm Model="@addressToBeCorrected" FormName="addressForm" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -25,50 +25,174 @@
     <div class="form-group col-md-4">
         <label for="Number">Number</label>
         <InputText id="Number" class="form-control" @bind-Value="@addressToBeCorrected.Number" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Number)" />
     </div>
 
     <div class="form-group col-md-4">
         <label for="Street">Street</label>
         <InputText id="Street" class="form-control" @bind-Value="@addressToBeCorrected.Street" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Street)" />
     </div>
 
     <div class="form-group col-md-4">
         <label for="Unit">Unit</label>
         <InputText id="Unit" class="form-control" @bind-Value="@addressToBeCorrected.Unit" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Unit)" />
     </div>
 
     <div class="form-group col-md-4">
         <label for="City">City</label>
         <InputText id="City" class="form-control" @bind-Value="@addressToBeCorrected.City" />
+        <ValidationMessage For="@(() => addressToBeCorrected.City)" />
     </div>
 
     <div class="form-group col-md-4">
         <label for="Postcode">Postcode</label>
         <InputText id="Postcode" class="form-control" @bind-Value="@addressToBeCorrected.Postcode" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Postcode)" />
     </div>
 
     <div class="form-group col-md-4">
         <label for="Region">Region</label>
-        <InputText id="Region" class="form-control" @bind-Value="@addressToBeCorrected.Region" />
+        <select id="Region" class="form-control" @bind="@addressToBeCorrected.Region">
+            <option value="NSW">NSW</option>
+            <option value="VIC">VIC</option>
+            <option value="QLD">QLD</option>
+            <option value="WA">WA</option>
+            <option value="SA">SA</option>
+            <option value="TAS">TAS</option>
+            <option value="ACT">ACT</option>
+            <option value="NT">NT</option>
+        </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
 </EditForm>
 
+<h3 style="padding-top: 2em">Upload known-good addresses</h3>
+
+<p>Upload a CSV file containing known-good addresses.</p>
+
+<EditForm Model="knownGoodAddress">
+    <div>
+        <InputFile OnChange="HandleFileSelected" />
+    </div>
+</EditForm>
+
+@if (isLoading)
+{
+    <div class="progress col-md-4">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+            style="width: @progressPercent%"></div>
+        <p>
+            @progressPercent% complete
+        </p>
+    </div>
+}
+
 @code {
+    private int progressPercent = 0;
     private Models.InputAddress addressToBeCorrected = new Models.InputAddress();
-
+    private Models.Address knownGoodAddress = new Models.Address();
+    private bool isLoading = false;
     private async Task HandleValidSubmit()
+
+
     {
-
-        Console.WriteLine(addressToBeCorrected.Number);
-
-        // convert the InputAddress object to a JSON string
         string json = JsonSerializer.Serialize(addressToBeCorrected);
-
         Console.WriteLine(json);
 
-        await Task.Delay(1000);
-        // send the JSON string to the server
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", addressToBeCorrected);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            Console.WriteLine("Address corrected successfully");
+        }
+        else
+        {
+            Console.WriteLine("Address correction failed");
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+
+        isLoading = true;
+
+        int successfulPosts = 0;
+        int unsuccessfulPosts = 0;
+
+        Console.WriteLine("Reading file into memory...");
+
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        var fileContent = Encoding.UTF8.GetString(buffer);
+        var lines = fileContent.Split("\n").ToArray();
+
+
+        Console.WriteLine("Number of lines: " + lines.Length);
+
+        foreach (var line in lines)
+        {
+            progressPercent = (int)(((double)Array.IndexOf(lines, line) / (double)lines.Length) * 100);
+
+            if (line.StartsWith("id"))
+            {
+                continue;
+            }
+            var values = line.Split(",");
+
+            try
+            {
+                var address = new Models.Address
+                    {
+                        Id = values[0],
+                        Number = int.Parse(values[1]),
+                        Street = values[2],
+                        Unit = values[3],
+                        Longitude = values[4],
+                        Latitude = values[5],
+                        City = values[6],
+                        Postcode = int.Parse(values[7]),
+                        Region = values[8],
+                        Accuracy = int.Parse(values[9])
+
+                    };
+
+
+                Console.WriteLine("Posting address to server: " + JsonSerializer.Serialize(address));
+
+                var json = JsonSerializer.Serialize(address);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", address);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK || response.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    successfulPosts++;
+                }
+                else
+                {
+                    Console.WriteLine("Failed to post address to server: " + response.StatusCode);
+                    unsuccessfulPosts++;
+                }
+            }
+            catch (Exception error)
+            {
+                continue;
+            }
+        }
+
+        progressPercent = 100;
+
+        isLoading = false;
+        Console.WriteLine("File uploaded successfully");
+
+        Console.WriteLine($"Successful posts: {successfulPosts}");
+        Console.WriteLine($"Unsuccessful posts: {unsuccessfulPosts}");
     }
 }

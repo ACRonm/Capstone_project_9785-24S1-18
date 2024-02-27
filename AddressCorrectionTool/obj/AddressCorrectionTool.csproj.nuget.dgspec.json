@@ -59,6 +59,10 @@
             "SendGrid": {
               "target": "Package",
               "version": "[9.29.2, )"
+            },
+            "csvhelper": {
+              "target": "Package",
+              "version": "[31.0.0, )"
             }
           },
           "imports": [

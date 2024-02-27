@@ -17,12 +17,19 @@ public class Address
 }
 
 public class InputAddress
-
 {
+    [Required]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Invalid number")]
     public string? Number { get; set; }
+    [Required]
     public string? Street { get; set; }
+    [RegularExpression(@"^\d+$", ErrorMessage = "Invalid number")]
     public string? Unit { get; set; }
+    [Required]
     public string? City { get; set; }
+    [Required]
+    [RegularExpression(@"^\d{4,}$", ErrorMessage = "Invalid postcode")]
     public string? Postcode { get; set; }
+    [Required]
     public string? Region { get; set; }
 }
