@@ -73,31 +73,35 @@
 
 <p>Upload a CSV file containing known-good addresses.</p>
 
-<EditForm Model="knownGoodAddress">
+<div style="margin-bottom: 20px; display: flex">
+    <div>Select your file:</div>
     <div>
-        <InputFile OnChange="HandleFileSelected" />
+        <InputFile OnChange="HandleFileSelected" type="file" />
     </div>
-</EditForm>
+</div>
+
+<h2>Selected file</h2>
+<div>
+    <div>File name: @FileName</div>
+    <div>File size: @FileSize</div>
+    <div>File type: @FileType</div>
+    <div>Last modified: @LastModified</div>
+</div>
 
 @if (isLoading)
 {
-    <div class="progress col-md-4">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-            style="width: @progressPercent%"></div>
-        <p>
-            @progressPercent% complete
-        </p>
+    @* display loading circle *@
+
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Uploading...</span>
     </div>
 }
 
 @code {
-    private int progressPercent = 0;
     private Models.InputAddress addressToBeCorrected = new Models.InputAddress();
     private Models.Address knownGoodAddress = new Models.Address();
     private bool isLoading = false;
     private async Task HandleValidSubmit()
-
-
     {
         string json = JsonSerializer.Serialize(addressToBeCorrected);
         Console.WriteLine(json);
@@ -112,87 +116,80 @@
         }
         else
         {
+            Console.WriteLine(response.StatusCode);
             Console.WriteLine("Address correction failed");
         }
     }
 
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    public string FileName { get; set; } = string.Empty;
+    public long FileSize { get; set; }
+    public string FileType { get; set; } = string.Empty;
+    public DateTimeOffset LastModified { get; set; }
+    // max file size = 2gb
+    private const long MAX_FILE_SIZE = 2147483648;
+
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
+        var browserFile = e.File;
 
-        isLoading = true;
-
-        int successfulPosts = 0;
-        int unsuccessfulPosts = 0;
-
-        Console.WriteLine("Reading file into memory...");
-
-        var file = e.File;
-        var buffer = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffer);
-
-        var fileContent = Encoding.UTF8.GetString(buffer);
-        var lines = fileContent.Split("\n").ToArray();
-
-
-        Console.WriteLine("Number of lines: " + lines.Length);
-
-        foreach (var line in lines)
+        if (browserFile != null)
         {
-            progressPercent = (int)(((double)Array.IndexOf(lines, line) / (double)lines.Length) * 100);
-
-            if (line.StartsWith("id"))
-            {
-                continue;
-            }
-            var values = line.Split(",");
+            FileSize = browserFile.Size;
+            FileType = browserFile.ContentType;
+            FileName = browserFile.Name;
 
             try
             {
-                var address = new Models.Address
+                Console.WriteLine("Reading file");
+
+                using var streamReader = new StreamReader(browserFile.OpenReadStream(MAX_FILE_SIZE));
+
+                string line;
+                while ((line = await streamReader.ReadLineAsync()) != null)
+                {
+                    if (line.Contains("Number")) continue;
+                    try
                     {
-                        Id = values[0],
-                        Number = int.Parse(values[1]),
-                        Street = values[2],
-                        Unit = values[3],
-                        Longitude = values[4],
-                        Latitude = values[5],
-                        City = values[6],
-                        Postcode = int.Parse(values[7]),
-                        Region = values[8],
-                        Accuracy = int.Parse(values[9])
+                        string[] values = line.Split(',');
+                        knownGoodAddress.Id = (values[0]);
+                        knownGoodAddress.Number = int.Parse(values[1]);
+                        knownGoodAddress.Street = values[2];
+                        knownGoodAddress.Unit = values[3];
+                        knownGoodAddress.Longitude = values[4];
+                        knownGoodAddress.Latitude = values[5];
+                        knownGoodAddress.City = values[6];
+                        knownGoodAddress.Postcode = int.Parse(values[7]);
+                        knownGoodAddress.Region = values[8];
+                        knownGoodAddress.Accuracy = int.Parse(values[9]);
 
-                    };
+                        var json = JsonSerializer.Serialize(knownGoodAddress);
 
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine("Posting address to server: " + JsonSerializer.Serialize(address));
+                        var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", knownGoodAddress);
 
-                var json = JsonSerializer.Serialize(address);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            Console.WriteLine("Address added successfully");
+                        }
+                        else
+                        {
+                            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                                Console.WriteLine("Address already exists");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
 
-                var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", address);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK || response.StatusCode == System.Net.HttpStatusCode.Created)
-                {
-                    successfulPosts++;
-                }
-                else
-                {
-                    Console.WriteLine("Failed to post address to server: " + response.StatusCode);
-                    unsuccessfulPosts++;
                 }
             }
-            catch (Exception error)
+            catch (Exception ex)
             {
-                continue;
+                Console.WriteLine(ex.Message);
             }
+            isLoading = false;
         }
-
-        progressPercent = 100;
-
-        isLoading = false;
-        Console.WriteLine("File uploaded successfully");
-
-        Console.WriteLine($"Successful posts: {successfulPosts}");
-        Console.WriteLine($"Unsuccessful posts: {unsuccessfulPosts}");
     }
 }
