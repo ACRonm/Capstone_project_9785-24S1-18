@@ -108,7 +108,7 @@
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", addressToBeCorrected);
+        var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addressToBeCorrected);
 
         if (response.StatusCode == System.Net.HttpStatusCode.OK)
         {
@@ -166,7 +166,7 @@
 
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                        var response = await Http.PostAsJsonAsync("http://localhost:5196/api/Addresses", knownGoodAddress);
+                        var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", knownGoodAddress);
 
                         if (response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
