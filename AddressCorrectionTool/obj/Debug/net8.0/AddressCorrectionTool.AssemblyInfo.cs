@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AddressCorrectionTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50b027a9d2deac73c87be4f1a8d3739b58305918")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cab4fe2ec70c25829a09d097e82fd81af0179f1b")]
 [assembly: System.Reflection.AssemblyProductAttribute("AddressCorrectionTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AddressCorrectionTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
