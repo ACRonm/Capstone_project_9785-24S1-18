@@ -1,2 +1,5 @@
 proof_of_concept/data/*.csv
 __pycache__/
+.vs/
+*.Up2Date
+*.json
