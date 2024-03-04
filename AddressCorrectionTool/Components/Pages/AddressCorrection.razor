@@ -170,20 +170,14 @@
 
                         if (lineNumber % 10000 == 0)
                         {
-                            for (int i = 0; i < addresses.Count; i++)
-                            {
-                                var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addresses[i]);
+                            // post list of addresses to the server
+                            var json = JsonSerializer.Serialize(addresses);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addresses);
 
-                                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                                {
-                                    Console.WriteLine("Addresses added successfully");
-                                }
-                                else
-                                {
-                                    if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                                        Console.WriteLine("Address already exists");
-                                }
-                            }
+                            //print the response
+                            Console.WriteLine(response.StatusCode);
+
                             // clear the list
                             addresses.Clear();
                         }
