@@ -45,6 +45,14 @@ app.MapGet("/Addresses", (AddressContext context) =>
     .WithName("NumberOfAddresses")
     .WithOpenApi();
 
+// get number of addresses in the database
+app.MapGet("/Addresses/number", (AddressContext context) =>
+{
+    return context.Addresses.Count();
+})
+    .WithName("NumberOfAddressesInDatabase")
+    .WithOpenApi();
+
 //get address by street name
 app.MapGet("/Addresses/street/{street}", (string street, AddressContext context) =>
 {
@@ -55,23 +63,21 @@ app.MapGet("/Addresses/street/{street}", (string street, AddressContext context)
 
 app.MapPost("/Addresses", (Address address, AddressContext context) =>
 {
-    // for each post, add it to a batch, once the batch reaches 10000, save to the database.
     var addressList = new List<Address>();
-    // check if the address already exists
-    var existingAddress = context.Addresses.Find(address.Id);
+    // expected input a json with a list of addresses,
+    // if the input is a list of addresses, add each address to the database
+    if (address != null)
+    {
+        addressList.Add(address);
 
-    if (existingAddress != null)
-    {
-        return Results.Conflict();
+        if(addressList.Count() % 10000 == 0)
+        {
+            // send all the addresses in the list to the database
+            context.AddRange(addressList);
+            context.SaveChanges();
+        }
     }
-    addressList.Add(address);
-    if (addressList.Count == 10000)
-    {
-        Console.WriteLine("Saving to database...");
-        context.AddRange(addressList);
-        context.SaveChanges();
-        addressList.Clear();
-    }
+
     return Results.Created($"/Addresses/{address.Id}", address);
 
 })
@@ -161,7 +167,7 @@ app.MapDelete("/InputAddresses", (AddressContext context) =>
     context.SaveChanges();
 })
     .WithName("DeleteAllInputAddresses")
-    .WithOpenApi(); 
+    .WithOpenApi();
 
 app.UseHttpsRedirection();
 

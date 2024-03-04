@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj": {}
+    "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj": {}
   },
   "projects": {
-    "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj": {
+    "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
+        "projectUniqueName": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
         "projectName": "AddressCorrectionTool",
-        "projectPath": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
+        "projectPath": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
         "packagesPath": "C:\\Users\\aiden\\.nuget\\packages\\",
-        "outputPath": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\",
+        "outputPath": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aiden\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -34,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -84,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -131,12 +131,14 @@
     public async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var browserFile = e.File;
+        int lineNumber = 0;
 
         if (browserFile != null)
         {
             FileSize = browserFile.Size;
             FileType = browserFile.ContentType;
             FileName = browserFile.Name;
+            var addresses = new List<Models.Address>();
 
             try
             {
@@ -150,6 +152,8 @@
                     if (line.Contains("Number")) continue;
                     try
                     {
+                        lineNumber++;
+
                         string[] values = line.Split(',');
                         knownGoodAddress.Id = (values[0]);
                         knownGoodAddress.Number = int.Parse(values[1]);
@@ -162,27 +166,26 @@
                         knownGoodAddress.Region = values[8];
                         knownGoodAddress.Accuracy = int.Parse(values[9]);
 
-                        var json = JsonSerializer.Serialize(knownGoodAddress);
+                        addresses.Add(knownGoodAddress);
 
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                        var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", knownGoodAddress);
-
-                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        if (lineNumber % 10000 == 0)
                         {
-                            Console.WriteLine("Address added successfully");
-                        }
-                        else
-                        {
-                            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                                Console.WriteLine("Address already exists");
+                            // post list of addresses to the server
+                            var json = JsonSerializer.Serialize(addresses);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addresses);
+
+                            //print the response
+                            Console.WriteLine(response.StatusCode);
+
+                            // clear the list
+                            addresses.Clear();
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-
                 }
             }
             catch (Exception ex)
