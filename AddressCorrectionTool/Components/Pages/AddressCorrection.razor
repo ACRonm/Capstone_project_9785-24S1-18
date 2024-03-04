@@ -1,0 +1,195 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using AddressCorrectionTool.Models
+@using System.Text
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Web
+
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+@inject HttpClient Http
+
+@page "/address-correction"
+
+<PageTitle>Address Correction</PageTitle>
+
+<h3>Submit Address to be corrected</h3>
+
+<EditForm Model="@addressToBeCorrected" FormName="addressForm" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group col-md-4">
+        <label for="Number">Number</label>
+        <InputText id="Number" class="form-control" @bind-Value="@addressToBeCorrected.Number" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Number)" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="Street">Street</label>
+        <InputText id="Street" class="form-control" @bind-Value="@addressToBeCorrected.Street" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Street)" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="Unit">Unit</label>
+        <InputText id="Unit" class="form-control" @bind-Value="@addressToBeCorrected.Unit" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Unit)" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="City">City</label>
+        <InputText id="City" class="form-control" @bind-Value="@addressToBeCorrected.City" />
+        <ValidationMessage For="@(() => addressToBeCorrected.City)" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="Postcode">Postcode</label>
+        <InputText id="Postcode" class="form-control" @bind-Value="@addressToBeCorrected.Postcode" />
+        <ValidationMessage For="@(() => addressToBeCorrected.Postcode)" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="Region">Region</label>
+        <select id="Region" class="form-control" @bind="@addressToBeCorrected.Region">
+            <option value="NSW">NSW</option>
+            <option value="VIC">VIC</option>
+            <option value="QLD">QLD</option>
+            <option value="WA">WA</option>
+            <option value="SA">SA</option>
+            <option value="TAS">TAS</option>
+            <option value="ACT">ACT</option>
+            <option value="NT">NT</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
+</EditForm>
+
+<h3 style="padding-top: 2em">Upload known-good addresses</h3>
+
+<p>Upload a CSV file containing known-good addresses.</p>
+
+<div style="margin-bottom: 20px; display: flex">
+    <div>Select your file:</div>
+    <div>
+        <InputFile OnChange="HandleFileSelected" type="file" />
+    </div>
+</div>
+
+<h2>Selected file</h2>
+<div>
+    <div>File name: @FileName</div>
+    <div>File size: @FileSize</div>
+    <div>File type: @FileType</div>
+    <div>Last modified: @LastModified</div>
+</div>
+
+@if (isLoading)
+{
+    @* display loading circle *@
+
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Uploading...</span>
+    </div>
+}
+
+@code {
+    private Models.InputAddress addressToBeCorrected = new Models.InputAddress();
+    private Models.Address knownGoodAddress = new Models.Address();
+    private bool isLoading = false;
+    private async Task HandleValidSubmit()
+    {
+        string json = JsonSerializer.Serialize(addressToBeCorrected);
+        Console.WriteLine(json);
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await Http.PostAsJsonAsync("https://localhost:7207/InputAddresses", addressToBeCorrected);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            Console.WriteLine("Address corrected successfully");
+        }
+        else
+        {
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine("Address correction failed");
+        }
+    }
+
+    public string FileName { get; set; } = string.Empty;
+    public long FileSize { get; set; }
+    public string FileType { get; set; } = string.Empty;
+    public DateTimeOffset LastModified { get; set; }
+    // max file size = 2gb
+    private const long MAX_FILE_SIZE = 2147483648;
+
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var browserFile = e.File;
+
+        if (browserFile != null)
+        {
+            FileSize = browserFile.Size;
+            FileType = browserFile.ContentType;
+            FileName = browserFile.Name;
+
+            try
+            {
+                Console.WriteLine("Reading file");
+
+                using var streamReader = new StreamReader(browserFile.OpenReadStream(MAX_FILE_SIZE));
+
+                string line;
+                while ((line = await streamReader.ReadLineAsync()) != null)
+                {
+                    if (line.Contains("Number")) continue;
+                    try
+                    {
+                        string[] values = line.Split(',');
+                        knownGoodAddress.Id = (values[0]);
+                        knownGoodAddress.Number = int.Parse(values[1]);
+                        knownGoodAddress.Street = values[2];
+                        knownGoodAddress.Unit = values[3];
+                        knownGoodAddress.Longitude = values[4];
+                        knownGoodAddress.Latitude = values[5];
+                        knownGoodAddress.City = values[6];
+                        knownGoodAddress.Postcode = int.Parse(values[7]);
+                        knownGoodAddress.Region = values[8];
+                        knownGoodAddress.Accuracy = int.Parse(values[9]);
+
+                        var json = JsonSerializer.Serialize(knownGoodAddress);
+
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", knownGoodAddress);
+
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            Console.WriteLine("Address added successfully");
+                        }
+                        else
+                        {
+                            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                                Console.WriteLine("Address already exists");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            isLoading = false;
+        }
+    }
+}

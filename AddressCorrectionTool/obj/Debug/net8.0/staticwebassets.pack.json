@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AddressCorrectionTool.bundle.scp.css",
+      "PackagePath": "staticwebassets\\AddressCorrectionTool.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AddressCorrectionTool.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.AddressCorrectionTool.props",
+      "PackagePath": "build\\AddressCorrectionTool.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.AddressCorrectionTool.props",
+      "PackagePath": "buildMultiTargeting\\AddressCorrectionTool.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.AddressCorrectionTool.props",
+      "PackagePath": "buildTransitive\\AddressCorrectionTool.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
