@@ -4420,11 +4420,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
+      "projectUniqueName": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
       "projectName": "AddressCorrectionTool",
-      "projectPath": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
+      "projectPath": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\AddressCorrectionTool.csproj",
       "packagesPath": "C:\\Users\\aiden\\.nuget\\packages\\",
-      "outputPath": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\",
+      "outputPath": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\aiden\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4447,11 +4447,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4502,7 +4497,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

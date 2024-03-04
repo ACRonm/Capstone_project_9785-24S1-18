@@ -61,25 +61,17 @@ app.MapGet("/Addresses/street/{street}", (string street, AddressContext context)
     .WithName("AddressesByStreet")
     .WithOpenApi();
 
-app.MapPost("/Addresses", (Address address, AddressContext context) =>
+app.MapPost("/Addresses", (List<Address> addresses, AddressContext context) =>
 {
-    var addressList = new List<Address>();
-    // expected input a json with a list of addresses,
-    // if the input is a list of addresses, add each address to the database
-    if (address != null)
+
+    if (addresses != null)
     {
-        addressList.Add(address);
+        context.AddRange(addresses);
+        context.SaveChanges();
 
-        if(addressList.Count() % 10000 == 0)
-        {
-            // send all the addresses in the list to the database
-            context.AddRange(addressList);
-            context.SaveChanges();
-        }
+        return Results.Ok();
     }
-
-    return Results.Created($"/Addresses/{address.Id}", address);
-
+    else { return Results.NotFound(); }
 })
 .WithName("CreateAddress")
 .WithOpenApi();

@@ -86,6 +86,7 @@
     <div>File size: @FileSize</div>
     <div>File type: @FileType</div>
     <div>Last modified: @LastModified</div>
+    <div>Bytes read: @bytesReadInTotal</div>
 </div>
 
 @if (isLoading)
@@ -123,6 +124,7 @@
 
     public string FileName { get; set; } = string.Empty;
     public long FileSize { get; set; }
+    public long bytesReadInTotal;
     public string FileType { get; set; } = string.Empty;
     public DateTimeOffset LastModified { get; set; }
     // max file size = 2gb
@@ -139,6 +141,7 @@
             FileType = browserFile.ContentType;
             FileName = browserFile.Name;
             var addresses = new List<Models.Address>();
+            bytesReadInTotal = 0;
 
             try
             {
@@ -149,48 +152,55 @@
                 string line;
                 while ((line = await streamReader.ReadLineAsync()) != null)
                 {
+                    bytesReadInTotal += line.Length;
                     if (line.Contains("Number")) continue;
                     try
                     {
                         lineNumber++;
 
                         string[] values = line.Split(',');
-                        knownGoodAddress.Id = (values[0]);
-                        knownGoodAddress.Number = int.Parse(values[1]);
-                        knownGoodAddress.Street = values[2];
-                        knownGoodAddress.Unit = values[3];
-                        knownGoodAddress.Longitude = values[4];
-                        knownGoodAddress.Latitude = values[5];
-                        knownGoodAddress.City = values[6];
-                        knownGoodAddress.Postcode = int.Parse(values[7]);
-                        knownGoodAddress.Region = values[8];
-                        knownGoodAddress.Accuracy = int.Parse(values[9]);
+                        var knownGoodAddress = new Models.Address
+                            {
+                                Id = (values[0]),
+                                Number = int.Parse(values[1]),
+                                Street = values[2],
+                                Unit = values[3],
+                                Longitude = values[4],
+                                Latitude = values[5],
+                                City = values[6],
+                                Postcode = int.Parse(values[7]),
+                                Region = values[8],
+                                Accuracy = int.Parse(values[9])
+                            };
+
 
                         addresses.Add(knownGoodAddress);
 
                         if (lineNumber % 10000 == 0)
                         {
                             // post list of addresses to the server
+                            // find all non-unique Ids and remove them
                             var json = JsonSerializer.Serialize(addresses);
                             var content = new StringContent(json, Encoding.UTF8, "application/json");
                             var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addresses);
 
-                            //print the response
-                            Console.WriteLine(response.StatusCode);
-
                             // clear the list
                             addresses.Clear();
+
+                            //print the response
+                            Console.WriteLine(response.StatusCode);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        // log the error
+
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+
             }
             isLoading = false;
         }
