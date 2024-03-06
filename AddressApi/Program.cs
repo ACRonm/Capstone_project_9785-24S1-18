@@ -37,17 +37,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// get number of addresses
-app.MapGet("/Addresses", (AddressContext context) =>
-{
-    return context.Addresses.Count();
-})
-    .WithName("NumberOfAddresses")
-    .WithOpenApi();
-
 // get number of addresses in the database
 app.MapGet("/Addresses/number", (AddressContext context) =>
 {
+    // set timeout to 5 minutes
+    context.Database.SetCommandTimeout(300);
+
     return context.Addresses.Count();
 })
     .WithName("NumberOfAddressesInDatabase")
