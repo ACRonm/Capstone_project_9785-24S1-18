@@ -30,7 +30,7 @@ namespace AddressApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Latitude")
                         .HasColumnType("nvarchar(max)");
@@ -38,22 +38,24 @@ namespace AddressApi.Migrations
                     b.Property<string>("Longitude")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Postcode")
                         .HasColumnType("int");
 
                     b.Property<string>("Region")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Street", "City", "Postcode", "Region");
 
                     b.ToTable("Addresses");
                 });
@@ -67,24 +69,26 @@ namespace AddressApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Postcode")
                         .HasColumnType("int");
 
                     b.Property<string>("Region")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Street", "City", "Postcode", "Region");
 
                     b.ToTable("InputAddresses");
                 });

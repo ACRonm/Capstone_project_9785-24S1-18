@@ -1,11 +1,16 @@
 ﻿using AddressApi.Models;
 using Microsoft.EntityFrameworkCore;
 using FuzzySharp;
+using CsvHelper;
+using System.IO;
+using System.Threading.Tasks;
+using System.Globalization;
 
 namespace AddressApi.Controllers
 {
     public class AddressCorrectionService
     {
+
         // _context is the database context
         private readonly AddressContext _context;
 
@@ -46,5 +51,18 @@ namespace AddressApi.Controllers
             };
             return await Task.FromResult(correctedAddress);
         }
+
+        public async Task<List<Address>> LoadAddressesFromCsvAsync()
+        {
+            Console.WriteLine("Loading addresses from CSV...");
+                
+            using (var reader = new StreamReader("./Data/au.csv"))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<Address>().ToList();
+                return await Task.FromResult(records);
+            }
+        }
+
     }
 }

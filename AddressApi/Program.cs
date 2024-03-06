@@ -37,16 +37,35 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// get number of addresses in the database
-app.MapGet("/Addresses/number", (AddressContext context) =>
-{
-    // set timeout to 5 minutes
-    context.Database.SetCommandTimeout(300);
+var addresses = new List<Address>();
 
-    return context.Addresses.Count();
+// get addresses from csv
+app.MapGet("/Addresses/csv", (AddressContext context) =>
+{
+    var addressCorrectionService = new AddressCorrectionService(context);
+    var addresses = addressCorrectionService.LoadAddressesFromCsvAsync().Result;
+
+    var count = addresses.Count;
+
+    // insert into db
+    context.AddRange(addresses);
+
+    context.SaveChangesAsync();
+
+    if (addresses != null)
+    {
+        return Results.Ok("Addresses loaded from csv: " + count);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+
 })
-    .WithName("NumberOfAddressesInDatabase")
+    .WithName("AddressesFromCsv")
     .WithOpenApi();
+
+
 
 //get address by street name
 app.MapGet("/Addresses/street/{street}", (string street, AddressContext context) =>

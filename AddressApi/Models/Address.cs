@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AddressApi.Models
 {
+    [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region))]
     public class Address
     {
         [Key]
         public string? Id { get; set; }
-        public int Number { get; set; }
+        public string? Number { get; set; }
         public string? Street { get; set; }
         public string? Unit { get; set; }
         public string? Longitude { get; set; }
@@ -18,12 +20,13 @@ namespace AddressApi.Models
         public int Accuracy { get; set; }
     }
 
+    [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region))]
     public class  InputAddress
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int Number { get; set; }
+        public string? Number { get; set; }
         public string? Street { get; set; }
         public string? Unit { get; set; }
         public string? City { get; set; }
