@@ -1,81 +1,77 @@
 import random
-from fuzzywuzzy import fuzz
 import string
-from tqdm import tqdm
 
 
-def apply_entropy(addresses):
+def simulate_errors(address_string):
 
-    misspelling_rate = 0.2
-    misspelt_addresses = []
-
-    for address in addresses:
-        address = address.strip()
-        if random.random() < misspelling_rate:
-            # transpose two characters
-            if len(address) > 1:
-                index = random.randint(0, len(address) - 2)
-                address = address[:index] + address[index +
-                                                    1] + address[index] + address[index + 2:]
-
-        misspelt_addresses.append(address)
-    return misspelt_addresses
-
-
-def string_match(misspelt_addresses, addresses):
-
-    corrected_addresses = []
-    number_of_incorrect = 0
-
-    for address in tqdm(misspelt_addresses, desc="Processing addresses"):
-        closest_match = max(addresses, key=lambda x: fuzz.ratio(x, address))
-        corrected_addresses.append(closest_match)
-
-        address = closest_match
-        if address != closest_match:
-            number_of_incorrect += 1
-
-    print("Number of addresses processed: ", len(addresses))
-    print(f"Number of incorrect addresses: {number_of_incorrect}")
-    print(f"Accuracy: {100 - (number_of_incorrect / len(addresses)) * 100}%")
-    if number_of_incorrect != 0:
-        print("Top ten incorrect addresses:")
-        for i in range(10):
-            print(misspelt_addresses[i], " -> ", corrected_addresses[i])
-
-    return corrected_addresses
-
-
-def simulate_typing_errors(address):
     # Define operation functions
-    def random_insertion(address):
-        rand_index = random.randint(0, len(address))
+    def random_insertion(address_string):
+        rand_index = random.randint(0, len(address_string))
         rand_char = random.choice(string.ascii_letters)
-        return address[:rand_index] + rand_char + address[rand_index:]
+        return address_string[:rand_index] + rand_char + address_string[rand_index:]
 
-    def random_deletion(address):
-        if len(address) == 0:
-            return address
-        rand_index = random.randint(0, len(address) - 1)
-        return address[:rand_index] + address[rand_index + 1:]
+    def random_deletion(address_string):
+        if len(address_string) == 0:
+            return address_string
+        rand_index = random.randint(0, len(address_string) - 1)
+        return address_string[:rand_index] + address_string[rand_index + 1:]
 
-    def random_substitution(address):
-        if len(address) == 0:
-            return address
-        rand_index = random.randint(0, len(address) - 1)
+    def random_substitution(address_string):
+        if len(address_string) == 0:
+            return address_string
+        rand_index = random.randint(0, len(address_string) - 1)
         rand_char = random.choice(string.ascii_letters)
-        return address[:rand_index] + rand_char + address[rand_index + 1:]
+        return address_string[:rand_index] + rand_char + address_string[rand_index + 1:]
 
-    def random_transposition(address):
-        if len(address) < 2:
-            return address
-        rand_index = random.randint(0, len(address) - 2)
-        return address[:rand_index] + address[rand_index + 1] + address[rand_index] + address[rand_index + 2:]
+    def random_transposition(address_string):
+        if len(address_string) < 2:
+            return address_string
+        rand_index = random.randint(0, len(address_string) - 2)
+        return address_string[:rand_index] + address_string[rand_index + 1] + address_string[rand_index] + address_string[rand_index + 2:]
+
+    def ocr_error(address_string):
+        if len(address_string) == 0:
+            return address_string
+        # ocr errors are a common source of errors in address data
+        # we will simulate this by randomly replacing a character with a similar looking character
+        # for example, 0 with O, 1 with I, 2 with Z, etc.
+        # we will also add some random noise to the address
+
+        # Define a dictionary of similar looking characters
+        similar_chars = {
+            '0': ['O'],
+            '1': ['I'],
+            '2': ['Z'],
+            '3': ['B'],
+            '4': ['A'],
+            '5': ['S'],
+            '6': ['G'],
+            '7': ['T'],
+            '8': ['B'],
+            '9': ['Q']
+        }
+
+        # Choose a random character to replace
+        rand_index = random.randint(0, len(address_string) - 1)
+        rand_char = address_string[rand_index]
+
+        # If the character is in the similar_chars dictionary, replace it with a similar looking character
+        if rand_char in similar_chars:
+            rand_char = random.choice(similar_chars[rand_char])
+
+        # Add some random noise to the address
+        noise = ''.join(random.choices(
+            string.ascii_letters + string.digits, k=5))
+
+        address_string = address_string[:rand_index] + \
+            rand_char + address_string[rand_index + 1:] + noise
+
+        return address_string
 
     # Choose a random operation to apply
     operations = [random_insertion, random_deletion,
-                  random_substitution, random_transposition, random_transposition]
+                  random_substitution, random_transposition, random_transposition, ocr_error, ocr_error, ocr_error]
 
     rand_operation = random.choice(operations)
 
-    return rand_operation(address)
+    return rand_operation(address_string)

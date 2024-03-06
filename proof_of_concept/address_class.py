@@ -14,26 +14,18 @@ class Address:
     def get_full_address(self):
         return f"{self.unit} {self.number} {self.street}, {self.city}, {self.region}, {self.postcode}"
 
+    def to_list(self):
+        return [self.id, self.number, self.street, self.unit, self.long, self.lat, self.city, self.postcode, self.region, self.accuracy]
+
     def set_id(self, id):
         self.id = id
 
-    # set the street attribute
-    def set_number(self, number):
-        self.number = number
+    # get address by id
 
-    def set_street(self, street):
-        self.street = street
+    def get_address_by_id(self, id, addresses):
 
-    # set the city attribute
-    def set_city(self, city):
-        self.city = city
-
-    # set the region attribute
-    def set_region(self, region):
-        self.region = region
-
-    def set_postcode(self, postcode):
-        self.postcode = postcode
-
-    def set_unit(self, unit):
-        self.unit = unit
+        for address in addresses:
+            if address.id == id:
+                return address
+        else:
+            return "Address not found"

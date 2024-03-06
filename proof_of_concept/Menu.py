@@ -8,6 +8,7 @@ import random
 import entropy
 from fuzzywuzzy import fuzz
 import address_class
+import spell_correct
 
 
 class Menu:
@@ -18,7 +19,7 @@ class Menu:
             "2": self.apply_entropy,
             "3": self.string_match,
             "4": self.exit_program,
-            "5": self.get_street_types
+            # "5": self.get_street_types
         }
 
     def display_menu(self):
@@ -55,51 +56,43 @@ class Menu:
             misspelt_addresses = load_into_memory('./data/au.csv')
             print("Apply Entropy option selected")
             print("Applying entropy to the addresses...")
+
             for address in misspelt_addresses:
-                address['street'] = entropy.simulate_typing_errors(
-                    address['street'])
+                address.street = entropy.simulate_errors(address.street)
+                address.city = entropy.simulate_errors(address.city)
 
             # save as csv
-            with open('./data/au_misspelt.csv', 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(["id", "number", "street", "unit", "lon",
-                                "lat", "city", "postcode", "region", "accuracy"])
-                for address in misspelt_addresses:
-                    writer.writerow(address.values())
+            write_to_csv('./data/au_misspelt.csv', misspelt_addresses)
+            print("Entropy applied to the addresses and saved to file.")
         except FileNotFoundError:
             self.read_data()
 
     def string_match(self):
+        repaired_addresses = []
+        wrong_addresses = []
         # Implement the logic for the "String Match" option here
         print("String Match option selected")
-        try:
-            misspelt_address_dict = load_into_memory('./data/au_misspelt.csv')
-            correct_address_dict = load_into_memory('./data/au.csv')
 
-            misspelt_streets = [address['street']
-                                for address in misspelt_address_dict]
+        # load the misspelt addresses
+        misspelt_addresses = load_into_memory('./data/au_misspelt.csv')
+        # load the correct addresses
+        correct_addresses = load_into_memory('./data/au.csv')
 
-            correct_streets = [address['street']
-                               for address in correct_address_dict]
+        repaired_addresses, wrong_addresses = spell_correct.correct_spelling(
+            misspelt_addresses, correct_addresses)
 
-            entropy.string_match(misspelt_streets, correct_streets)
+        print(f"Repaired addresses: {len(repaired_addresses)}")
+        print(f"Wrong addresses: {len(wrong_addresses)}")
 
-        except FileNotFoundError:
-            self.apply_entropy()
+        # save as csv
+        write_to_csv('./data/au_repaired.csv', repaired_addresses)
+        # save wrong addresses as csv
+        write_to_csv('./data/au_wrong.csv', wrong_addresses)
 
-    def get_street_types(self, file='./data/au.csv'):
-        load_into_memory(file)
-        street_types = []
+        repaired_addresses = load_into_memory('./data/au_repaired.csv')
 
-        with open(file, 'r') as file:
-            for line in file:
-
-                street_types.append(line.split(',')[2].split(' ')[-1])
-
-        unique_street_types = set(street_types)
-        print(unique_street_types)
-
-        return unique_street_types
+        spell_correct.check_results(
+            repaired_addresses, correct_addresses)
 
     def exit_program(self):
         print("Exiting the program...")
@@ -154,12 +147,21 @@ def load_into_memory(filename):
         reader = csv.reader(file, delimiter=',')
         # Skip the header
         next(reader, None)
+
         for row in reader:
+            # create a new address object
             address = address_class.Address(
                 row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
-            addresses.append(address.__dict__)
-
-            if len(addresses) > 20000:
+            addresses.append(address)
+            if len(addresses) > 999:
                 break
-
     return addresses
+
+
+def write_to_csv(filename, data):
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["id", "number", "street", "unit", "lon",
+                        "lat", "city", "postcode", "region", "accuracy"])
+        for address in data:
+            writer.writerow(address.to_list())
