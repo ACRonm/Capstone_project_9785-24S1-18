@@ -57,7 +57,7 @@ class Menu:
             print("Apply Entropy option selected")
             print("Applying entropy to the addresses...")
 
-            for address in misspelt_addresses:
+            for address in tqdm(misspelt_addresses, desc="Applying entropy"):
                 address.street = entropy.simulate_errors(address.street)
                 address.city = entropy.simulate_errors(address.city)
 
@@ -76,7 +76,7 @@ class Menu:
         # load the misspelt addresses
         misspelt_addresses = load_into_memory('./data/au_misspelt.csv')
         # load the correct addresses
-        correct_addresses = load_into_memory('./data/au.csv')
+        correct_addresses = load_into_memory('./data/au.csv', read_all=True)
 
         repaired_addresses, wrong_addresses = spell_correct.correct_spelling(
             misspelt_addresses, correct_addresses)
@@ -140,7 +140,7 @@ def download_file(url, filename):
     return downloaded_filename
 
 
-def load_into_memory(filename):
+def load_into_memory(filename, read_all=False):
 
     addresses = []
     with open(filename, 'r') as file:
@@ -153,8 +153,13 @@ def load_into_memory(filename):
             address = address_class.Address(
                 row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
             addresses.append(address)
-            if len(addresses) > 999:
-                break
+
+            if read_all:
+                # load all addresses
+                continue
+            else:
+                if len(addresses) > 10000:
+                    break
     return addresses
 
 

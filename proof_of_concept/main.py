@@ -8,6 +8,5 @@ def main():
     menu.run()
 
 
-    # TODO: Implement your text repair system logic here
 if __name__ == '__main__':
     main()

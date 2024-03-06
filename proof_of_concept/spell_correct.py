@@ -13,19 +13,31 @@ def correct_spelling(misspelt_addresses, correct_addresses):
             return False
         return abs(int(postcode1) - int(postcode2)) < 10
 
+    # Create a dictionary to store the correct addresses by postcode for faster lookup
+    correct_addresses_by_postcode = {}
+    for address in correct_addresses:
+        if address.postcode not in correct_addresses_by_postcode:
+            correct_addresses_by_postcode[address.postcode] = []
+        correct_addresses_by_postcode[address.postcode].append(address)
+
     for misspelt_address in tqdm(misspelt_addresses):
         # use fuzzy wuzzy extractOne to find the closest match for both city and street
 
+        # Filter the addresses by postcode for faster lookup
+        filtered_addresses = correct_addresses_by_postcode.get(
+            misspelt_address.postcode, []) if misspelt_address.postcode else correct_addresses
+
         # find the closest match for the street
         closest_street_match = fuzzywuzzy.process.extractOne(
-            misspelt_address.street, [address.street for address in correct_addresses if postcode_is_within_10(address.postcode, misspelt_address.postcode) or misspelt_address.postcode == None])
+            misspelt_address.street, [address.street for address in filtered_addresses], scorer=fuzzywuzzy.fuzz.ratio)
 
         # find the closest match for the city
         closest_city_match = fuzzywuzzy.process.extractOne(
-            misspelt_address.city, [address.city for address in correct_addresses if postcode_is_within_10(address.postcode, misspelt_address.postcode) or misspelt_address.postcode == None])
+            misspelt_address.city, [address.city for address in filtered_addresses], scorer=fuzzywuzzy.fuzz.ratio)
 
         # if the closest match for both the street and city are above a certain threshold, we will consider the address to be repaired
         if closest_street_match and closest_city_match and closest_street_match[1] > 66 and closest_city_match[1] > 66:
+
             # create a new address object with the corrected street and city
             repaired_address = misspelt_address
 
@@ -56,13 +68,13 @@ def check_results(repaired_addresses, correct_addresses):
     number_of_repaired_addresses = len(repaired_addresses)
     number_of_wrong_addresses = 0
 
-    for repaired_address in tqdm(repaired_addresses):
+    for repaired_address in repaired_addresses:
         for correct_address in correct_addresses:
             if repaired_address.id == correct_address.id:
                 if repaired_address.street != correct_address.street or repaired_address.city != correct_address.city:
                     number_of_wrong_addresses += 1
                     print(
-                        f"Address {repaired_address.id} was not repaired correctly.")
+                        f"\nAddress {repaired_address.id} was not repaired correctly.")
                     print(f"Original: {correct_address.get_full_address()}")
                     print(f"Repaired: {repaired_address.get_full_address()}")
                     print(f"Misspelt: {repaired_address.get_address_by_id(
@@ -74,3 +86,12 @@ def check_results(repaired_addresses, correct_addresses):
     print(
         f"Number of repaired addresses: {number_of_repaired_addresses}")
     print(f"Number of wrong addresses: {number_of_wrong_addresses}")
+
+
+def main():
+
+    return
+
+
+if __name__ == "__main__":
+    main()

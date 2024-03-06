@@ -1,5 +1,6 @@
 import random
 import string
+from tqdm import tqdm
 
 
 def simulate_errors(address_string):
@@ -32,6 +33,7 @@ def simulate_errors(address_string):
     def ocr_error(address_string):
         if len(address_string) == 0:
             return address_string
+
         # ocr errors are a common source of errors in address data
         # we will simulate this by randomly replacing a character with a similar looking character
         # for example, 0 with O, 1 with I, 2 with Z, etc.
@@ -39,32 +41,29 @@ def simulate_errors(address_string):
 
         # Define a dictionary of similar looking characters
         similar_chars = {
-            '0': ['O'],
-            '1': ['I'],
-            '2': ['Z'],
-            '3': ['B'],
-            '4': ['A'],
-            '5': ['S'],
-            '6': ['G'],
-            '7': ['T'],
-            '8': ['B'],
-            '9': ['Q']
+            "O": "0",
+            "0": "O",
+            "I": "1",
+            "1": "I",
+            "Z": "2",
+            "2": "Z",
+            "S": "5",
+            "5": "S",
         }
 
-        # Choose a random character to replace
-        rand_index = random.randint(0, len(address_string) - 1)
-        rand_char = address_string[rand_index]
+        # if the string contains a number in the similar_chars dictionary, replace it with a similar looking letter
 
-        # If the character is in the similar_chars dictionary, replace it with a similar looking character
-        if rand_char in similar_chars:
-            rand_char = random.choice(similar_chars[rand_char])
+        ocr_error_rate = 0.1
 
-        # Add some random noise to the address
-        noise = ''.join(random.choices(
-            string.ascii_letters + string.digits, k=5))
+        for i in range(len(address_string)):
 
-        address_string = address_string[:rand_index] + \
-            rand_char + address_string[rand_index + 1:] + noise
+            if address_string[i] in similar_chars:
+                if random.random() < ocr_error_rate:
+                    replacement = random.choice(
+                        similar_chars[address_string[i]])
+
+                    address_string = address_string[:i] + \
+                        replacement + address_string[i + 1:]
 
         return address_string
 
