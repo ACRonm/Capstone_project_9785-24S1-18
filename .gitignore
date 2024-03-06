@@ -3,3 +3,4 @@ __pycache__/
 .vs/
 *.Up2Date
 *.json
+*.bin
