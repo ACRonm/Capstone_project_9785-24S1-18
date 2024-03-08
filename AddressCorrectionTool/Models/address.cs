@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AddressCorrectionTool.Models;
 
+
 public class Address
 {
     public string? Id { get; set; }
@@ -28,8 +29,8 @@ public class InputAddress
     [Required]
     public string? City { get; set; }
     [Required]
-    [RegularExpression(@"^\d{4,}$", ErrorMessage = "Invalid postcode")]
-    public string? Postcode { get; set; }
+    public int? Postcode { get; set; }
     [Required]
     public string? Region { get; set; }
+    public int? Result { get; set; } = 0;
 }
