@@ -27,6 +27,10 @@ def correct_spelling(misspelt_addresses, correct_addresses):
         filtered_addresses = correct_addresses_by_postcode.get(
             misspelt_address.postcode, []) if misspelt_address.postcode else correct_addresses
 
+        # If the postcode was incorrectly entered, we will use all correct addresses for matching
+        if not postcode_is_within_10(misspelt_address.postcode, filtered_addresses[0].postcode if filtered_addresses else None):
+            filtered_addresses = correct_addresses
+
         # find the closest match for the street
         closest_street_match = fuzzywuzzy.process.extractOne(
             misspelt_address.street, [address.street for address in filtered_addresses], scorer=fuzzywuzzy.fuzz.ratio)
