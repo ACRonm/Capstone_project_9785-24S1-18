@@ -5,6 +5,9 @@ using CsvHelper;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Security.AccessControl;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace AddressApi.Controllers
 {
@@ -19,10 +22,17 @@ namespace AddressApi.Controllers
             _context = context;
         }
 
-        public async Task<InputAddress> CorrectAddressAsync(InputAddress inputAddress)
+        public bool checkPostcode(int inputPostcode, int postcode)
+        {
+            // check if postcode is null
+            if (postcode == 0)
+                return false;
+            return (Math.Abs(inputPostcode - postcode) <= 10);  
+        }   
+
+        public async Task<InputAddress> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
             AddressCorrectionService addressCorrectionService = new AddressCorrectionService(_context);
-
             Console.WriteLine("Correcting address...", inputAddress.Street);
 
             if(inputAddress.Street == null)
@@ -31,38 +41,99 @@ namespace AddressApi.Controllers
                 return null;
             }
 
-            string inputStreetName = inputAddress.Street;
+            string inputStreetName = inputAddress.Street.ToUpper();
+            string inputCityName = inputAddress.City.ToUpper();
 
-            var knownStreetNames = await _context.Addresses.Select(a => a.Street).ToListAsync();
+            List<Address> filteredAddresses;
 
-            // find the highest match
-            var match = Process.ExtractOne(inputStreetName.ToUpper(), knownStreetNames); 
+            if (inputAddress.Postcode != 0)
+                filteredAddresses = addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
+            else
+                filteredAddresses = addresses;
             
-            Console.WriteLine ("Match: ", match.Value, match.Score);
 
-            var correctedAddress = new InputAddress
+            
+            if(!checkPostcode(inputAddress.Postcode, filteredAddresses.Any() ? filteredAddresses[0].Postcode : 0))
             {
-                Number = inputAddress.Number,
-                Street = match.Value,
-                Unit = inputAddress.Unit,
-                City = inputAddress.City,
-                Postcode = inputAddress.Postcode,
-                Region = inputAddress.Region
-            };
+                filteredAddresses = addresses;
+            }
+
+            List<string> knownStreetNames = new List<string>();
+            List<string> knownCityNames = new List<string>();
+
+            foreach (Address address in filteredAddresses)
+            {
+                knownStreetNames.Add(address.Street);
+                knownCityNames.Add(address.City);
+            }
+
+
+            // find the highest match            
+            var closestStreetMatchResult = FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames);
+
+            if (closestStreetMatchResult == null)
+            {
+                Debug.WriteLine("Closest street match result: " + 0);
+            }
+            else
+            {
+                Debug.WriteLine("Closest street match result: " + closestStreetMatchResult.Score);
+            }
+
+            var closestCityMatchResult = FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames);
+
+            if (closestCityMatchResult == null)
+            {
+                Debug.WriteLine("Closest city match result: " + 0);
+            }
+            else
+            {
+                Debug.WriteLine("Closest city match result: " + closestCityMatchResult.Score);
+            }
+            
+
+            InputAddress correctedAddress;
+
+            if (closestStreetMatchResult == null)
+            {
+                inputAddress.Result = 0;
+                return inputAddress;
+            }
+
+
+            if (closestStreetMatchResult.Score > 66 && closestCityMatchResult.Score > 66)
+            {
+                correctedAddress = new InputAddress
+                {
+
+                    Number = inputAddress.Number,
+                    Street = closestStreetMatchResult.Value,
+                    Unit = inputAddress.Unit,
+                    City = closestCityMatchResult.Value,
+                    Postcode = inputAddress.Postcode,
+                    Region = inputAddress.Region,
+                    Result = 1
+                };
+            }
+            else
+            {
+                correctedAddress = inputAddress;
+                correctedAddress.Result = 0;
+            }
+            
             return await Task.FromResult(correctedAddress);
         }
 
         public async Task<List<Address>> LoadAddressesFromCsvAsync()
         {
             Console.WriteLine("Loading addresses from CSV...");
-                
+
             using (var reader = new StreamReader("./Data/au.csv"))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = csv.GetRecords<Address>().ToList();
                 return await Task.FromResult(records);
             }
         }
-
     }
 }

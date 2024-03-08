@@ -3,6 +3,7 @@ using AddressApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AddressApi.Migrations
 {
     [DbContext(typeof(AddressContext))]
-    partial class AddressContextModelSnapshot : ModelSnapshot
+    [Migration("20240308071110_AddResultsToInputAddress")]
+    partial class AddResultsToInputAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace AddressApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Street", "City", "Postcode", "Region", "Result");
+                    b.HasIndex("Street", "City", "Postcode", "Region");
 
                     b.ToTable("InputAddresses");
                 });

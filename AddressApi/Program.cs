@@ -1,6 +1,8 @@
 using AddressApi.Models;
 using AddressApi.Controllers;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,8 +39,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var addresses = new List<Address>();
-
 // get addresses from csv
 app.MapGet("/Addresses/csv", (AddressContext context) =>
 {
@@ -65,11 +65,17 @@ app.MapGet("/Addresses/csv", (AddressContext context) =>
     .WithName("AddressesFromCsv")
     .WithOpenApi();
 
-
+static List<Address> GetAddresses(AddressContext context)
+{
+    return context.Addresses.ToList();
+}
 
 //get address by street name
 app.MapGet("/Addresses/street/{street}", (string street, AddressContext context) =>
 {
+    // set timeout to 5 minutes
+    context.Database.SetCommandTimeout(300);
+
     return context.Addresses.Where(a => a.Street == street.ToUpper()).ToList();
 })
     .WithName("AddressesByStreet")
@@ -119,14 +125,20 @@ app.MapDelete("/Addresses", (AddressContext context) =>
     .WithName("DeleteAllAddresses")
     .WithOpenApi();
 
+List<Address> addresses = new List<Address>();
+
 app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext context) =>
 {
-    context.Add(inputAddress);
-    context.SaveChanges();
+    //if addresses is empty , get addresses from db
+    if (addresses.IsNullOrEmpty())
+        addresses = GetAddresses(context);
 
     var addressCorrectionService = new AddressCorrectionService(context);
 
-    var correctedAddress = addressCorrectionService.CorrectAddressAsync(inputAddress).Result;
+    var correctedAddress = addressCorrectionService.CorrectAddressAsync(inputAddress, addresses).Result;
+
+    context.Add(correctedAddress);
+    context.SaveChanges();
     if (correctedAddress != null)
     {
         return Results.Ok(correctedAddress);

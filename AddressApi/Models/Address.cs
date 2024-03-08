@@ -20,7 +20,7 @@ namespace AddressApi.Models
         public int Accuracy { get; set; }
     }
 
-    [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region))]
+    [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region), nameof(Result))]
     public class  InputAddress
     {
         [Key]
@@ -32,5 +32,6 @@ namespace AddressApi.Models
         public string? City { get; set; }
         public int Postcode { get; set; }
         public string? Region { get; set; }
+        public int Result { get; set; }
     }
 }
