@@ -67,19 +67,11 @@ app.MapGet("/Addresses/csv", (AddressContext context) =>
 
 static List<Address> GetAddresses(AddressContext context)
 {
-    return context.Addresses.ToList();
-}
 
-//get address by street name
-app.MapGet("/Addresses/street/{street}", (string street, AddressContext context) =>
-{
     // set timeout to 5 minutes
     context.Database.SetCommandTimeout(300);
-
-    return context.Addresses.Where(a => a.Street == street.ToUpper()).ToList();
-})
-    .WithName("AddressesByStreet")
-    .WithOpenApi();
+    return context.Addresses.ToList();
+}
 
 app.MapPost("/Addresses", (List<Address> addresses, AddressContext context) =>
 {
@@ -149,33 +141,6 @@ app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext contex
     }
 })
     .WithName("CreateInputAddress")
-    .WithOpenApi();
-
-app.MapGet("/InputAddresses", (AddressContext context) =>
-{
-    return context.InputAddresses.ToList();
-})
-    .WithName("InputAddresses")
-    .WithOpenApi();
-
-app.MapGet("/InputAddresses/{id}", (int id, AddressContext context) =>
-{
-    return context.InputAddresses.Find(id);
-})
-    .WithName("InputAddress")
-    .WithOpenApi();
-
-app.MapDelete("/InputAddresses/{id}", (int id, AddressContext context) =>
-{
-    var inputAddress = context.InputAddresses.Find(id);
-    //check to see if it object exits in db
-    if (inputAddress != null)
-    {
-        context.InputAddresses.Remove(inputAddress);
-        context.SaveChanges();
-    }
-})
-    .WithName("DeleteInputAddress")
     .WithOpenApi();
 
 //delete all

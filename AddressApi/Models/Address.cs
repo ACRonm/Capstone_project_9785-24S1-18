@@ -34,4 +34,14 @@ namespace AddressApi.Models
         public string? Region { get; set; }
         public int Result { get; set; }
     }
+
+    public class Metrics
+    {
+        public int Id { get; set; }
+        public int TotalAddresses { get; set; }
+        public int CorrectedAddresses { get; set; }
+        public int FailedAddresses { get; set; }
+        
+    }
+
 }
