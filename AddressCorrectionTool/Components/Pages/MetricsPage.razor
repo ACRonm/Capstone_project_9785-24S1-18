@@ -19,64 +19,78 @@
 
 @rendermode InteractiveServer
 
-<h3>Address Correction Metrics</h3>
+<div class="container">
+    <h2 class="text-center mt-4">Address Correction Dashboard</h2>
+    <p class="text-center">Here you can view the metrics related to address correction.</p>
 
-<p>Here you can view the metrics related to address correction.</p>
+    <div class="row mt-5">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Metrics Chart</h5>
+                    @if (isLoaded)
+                    {
+                        <canvas id="metrics-chart"></canvas>
+                    }
+                    else
+                    {
+                        // display loading spinner
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    }
 
-<div class="row">
-    <div class="col-sm-4">
-        <div><canvas id="metrics-chart"></canvas></div>
-    </div>
-    <div class="col-md-6">
-        <div><canvas id="acquisitions2"></canvas></div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center"></h5>
+                    <canvas id=""></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="/javascript/charts.js"></script>
 
-<script>
-    window.convertArray = (win251Array) => {
-        var win251Array = new TextDecoder('windows-1251');
-        var bytes = new Uint8Array(win251Array);
-        var decodedArray = win251Array.decode(bytes);
-        return decodedArray;
-    }
-</script>
-
 @code
 {
-
+    private bool isLoaded = false;
     private string baseUrl = "https://localhost:7207";
-    private const string Identifier = "createMetricsChart";
     private Metrics metrics = new Models.Metrics();
     private int[] metricsArray = new int[3];
 
-    protected override async Task OnInitializedAsync()
-    {
-
-        metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics");
-
-        if (metrics != null)
-        {
-            // add the values to the array
-            metricsArray[0] = metrics.TotalAddresses;
-            metricsArray[1] = metrics.CorrectedAddresses;
-            metricsArray[2] = metrics.FailedAddresses;
-        }
-
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender && metricsArray != null)
+        if (firstRender)
         {
-            CreateMetricsChart();
+            metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics");
+
+
+            if (metrics != null)
+            {
+                // add the values to the array
+                metricsArray[0] = metrics.TotalAddresses;
+                metricsArray[1] = metrics.CorrectedAddresses;
+                metricsArray[2] = metrics.FailedAddresses;
+            }
+            isLoaded = true;
+            StateHasChanged();
+        }
+        else if (metricsArray != null)
+        {
+            await CreateMetricsChart();
         }
     }
 
     async Task CreateMetricsChart()
     {
-        await JSRuntime.InvokeVoidAsync(Identifier, metricsArray);
+        await JSRuntime.InvokeVoidAsync("createMetricsChart", metricsArray);
     }
 
 }

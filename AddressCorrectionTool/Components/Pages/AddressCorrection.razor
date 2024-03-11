@@ -73,14 +73,15 @@
 
     <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
 </EditForm>
-
-<div> class="spinner-border" role="status" style="margin-top: 1em" @if (isLoading) { <span class="sr-only">Loading...</span> } </div>
-
+<div>
+    <div class="spinner-border" role="status" style="margin-top: 1em"></div> @if (isLoading)
+    {
+        <span class="sr-only">Loading...</span>
+    }
+</div>
 @code {
 
-    private bool isDevelopment = false;
     private InputAddress addressToBeCorrected = new Models.InputAddress();
-    private Address knownGoodAddress = new Models.Address();
     private bool isLoading = false;
     private string baseUrl = "https://localhost:7207";
 

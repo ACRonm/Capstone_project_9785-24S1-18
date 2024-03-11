@@ -27,10 +27,8 @@ async function createMetricsChart(data) {
                         ],
                         datalabels: {
                             color: '#ffff',
-                            align: 'start',
-                            offset: 10,
                             font: {
-                                size: '20',
+                                size: '25',
                                 weight: 'bold'
                             }
 

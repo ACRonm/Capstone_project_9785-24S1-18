@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "atPBONw+igGBuZr2HR1qqHVD+rmT99KCJpjcCK2ACIQ=",
+  "Hash": "EqWYOvwheWiQtvCoD/p6hsgE/5OsVVHv9JceGkPRboU=",
   "Source": "AddressCorrectionTool",
   "BasePath": "_content/AddressCorrectionTool",
   "Mode": "Default",
@@ -205,6 +205,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\syncfusionessentialaspnetcore-js2webinstaller.exe"
+    },
+    {
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
+      "SourceId": "AddressCorrectionTool",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
+      "BasePath": "_content/AddressCorrectionTool",
+      "RelativePath": "images/UC_Logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\UC_Logo.png"
     },
     {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
