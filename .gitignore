@@ -1,6 +1,9 @@
 proof_of_concept/data/*.csv
 __pycache__/
-.vs/
+*/.vs/
 *.Up2Date
 *.json
 *.bin
+
+*/bin/
+*/obj/
