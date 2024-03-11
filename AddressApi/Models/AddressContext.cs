@@ -11,5 +11,6 @@ namespace AddressApi.Models
         }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<InputAddress> InputAddresses { get; set; }
+        public DbSet<Metrics> Metrics { get; set; }
     }
 }

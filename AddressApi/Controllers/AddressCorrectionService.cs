@@ -32,6 +32,8 @@ namespace AddressApi.Controllers
 
         public async Task<InputAddress> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
+            TimeSpan time = new TimeSpan(0, 0, 0, 0, 0);
+
             AddressCorrectionService addressCorrectionService = new AddressCorrectionService(_context);
             Console.WriteLine("Correcting address...", inputAddress.Street);
 
@@ -120,7 +122,32 @@ namespace AddressApi.Controllers
                 correctedAddress = inputAddress;
                 correctedAddress.Result = 0;
             }
-            
+
+            time = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+
+            // increment the metrics
+            if (_context.Metrics.Find(1) == null)
+            {
+                _context.Metrics.Add(new Metrics {TotalAddresses = 1, CorrectedAddresses = 0, FailedAddresses = 0 });
+            }
+            else
+            {
+                _context.Metrics.Find(1).TotalAddresses++;
+            }
+
+            if (correctedAddress != null && correctedAddress.Result == 0)
+            {
+                _context.Metrics.Find(1).FailedAddresses++;
+            }
+            else
+            {
+                _context.Metrics.Find(1).CorrectedAddresses++;
+            }
+   
+
+            // increment the "corrected addresses" metric
+
+
             return await Task.FromResult(correctedAddress);
         }
 

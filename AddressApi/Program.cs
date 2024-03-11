@@ -1,9 +1,10 @@
 using AddressApi.Models;
 using AddressApi.Controllers;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 
+List<Address> addresses = new List<Address>();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var serviceScope = app.Services.CreateScope())
+{
+    var services = serviceScope.ServiceProvider;
+    var context = services.GetRequiredService<AddressContext>();
+
+    addresses = GetAddresses(context);
+}
+
 // get addresses from csv
 app.MapGet("/Addresses/csv", (AddressContext context) =>
 {
@@ -65,13 +74,14 @@ app.MapGet("/Addresses/csv", (AddressContext context) =>
     .WithName("AddressesFromCsv")
     .WithOpenApi();
 
-static List<Address> GetAddresses(AddressContext context)
-{
+    static List<Address> GetAddresses(AddressContext context)
+    {
 
-    // set timeout to 5 minutes
-    context.Database.SetCommandTimeout(300);
-    return context.Addresses.ToList();
-}
+        Debug.WriteLine("Getting Addresses");
+        // set timeout to 5 minutes
+        context.Database.SetCommandTimeout(300);
+        return context.Addresses.ToList();
+    }
 
 app.MapPost("/Addresses", (List<Address> addresses, AddressContext context) =>
 {
@@ -117,7 +127,6 @@ app.MapDelete("/Addresses", (AddressContext context) =>
     .WithName("DeleteAllAddresses")
     .WithOpenApi();
 
-List<Address> addresses = new List<Address>();
 
 app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext context) =>
 {
@@ -150,6 +159,24 @@ app.MapDelete("/InputAddresses", (AddressContext context) =>
     context.SaveChanges();
 })
     .WithName("DeleteAllInputAddresses")
+    .WithOpenApi();
+
+//mapget metrics
+app.MapGet("/Metrics", (AddressContext context) =>
+{
+    Metrics metrics = context.Metrics.Find(1);
+    //print to debug
+
+    if (metrics != null)
+    {
+        return Results.Ok(metrics);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+})
+    .WithName("Metrics")
     .WithOpenApi();
 
 app.UseHttpsRedirection();
