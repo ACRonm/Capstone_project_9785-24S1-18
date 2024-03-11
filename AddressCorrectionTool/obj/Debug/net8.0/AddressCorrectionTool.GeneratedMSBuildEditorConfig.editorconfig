@@ -182,12 +182,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Failure.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGYWlsdXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Metrics.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNZXRyaWNzLnJhem9y
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/MetricsPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNZXRyaWNzUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Success.razor]

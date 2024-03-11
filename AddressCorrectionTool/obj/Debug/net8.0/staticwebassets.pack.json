@@ -21,6 +21,26 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\compass.png",
+      "PackagePath": "staticwebassets\\images\\compass.png"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\node-v20.11.1-x64 (1).msi",
+      "PackagePath": "staticwebassets\\images\\node-v20.11.1-x64 (1).msi"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\node-v20.11.1-x64.msi",
+      "PackagePath": "staticwebassets\\images\\node-v20.11.1-x64.msi"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\syncfusionessentialaspnetcore-js2webinstaller.exe",
+      "PackagePath": "staticwebassets\\images\\syncfusionessentialaspnetcore-js2webinstaller.exe"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
+      "PackagePath": "staticwebassets\\javascript\\charts.js"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AddressCorrectionTool.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

@@ -1,0 +1,16 @@
+@using AddressCorrectionTool.Controllers
+
+@page "/failure"
+@inject ResponseService ResponseService
+
+<h1>Failure!</h1>
+
+
+@if (ResponseService.CorrectedAddress != null)
+{
+    <p>The correction services returned the wrong address: @ResponseService.CorrectedAddressToString()</p>
+}
+else
+{
+    <p>No address was corrected</p>
+}

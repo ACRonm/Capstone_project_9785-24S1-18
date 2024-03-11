@@ -34,3 +34,10 @@ public class InputAddress
     public string? Region { get; set; }
     public int? Result { get; set; } = 0;
 }
+public class Metrics
+{
+    public int Id { get; set; }
+    public int TotalAddresses { get; set; }
+    public int CorrectedAddresses { get; set; }
+    public int FailedAddresses { get; set; }
+}

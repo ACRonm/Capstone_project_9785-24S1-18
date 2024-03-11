@@ -16,6 +16,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ResponseService ResponseService
+@inject ILogger<AddressCorrection> Logger
 
 @page "/address-correction"
 
@@ -73,55 +74,28 @@
     <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
 </EditForm>
 
-@if (isLoading)
-{
-    @* display loading circle *@
-
-    <div class="spinner-border" role="status">
-    </div>
-}
-
-@if (isDevelopment)
-{
-    <h3 style="padding-top: 2em">Upload known-good addresses</h3>
-
-    <p>Upload a CSV file containing known-good addresses.</p>
-
-    <div style="margin-bottom: 20px; display: flex">
-        <div>Select your file:</div>
-        <div>
-            <InputFile OnChange="HandleFileSelected" type="file" />
-        </div>
-    </div>
-
-    <h2>Selected file</h2>
-    <div>
-        <div>File name: @FileName</div>
-        <div>File size: @FileSize</div>
-        <div>File type: @FileType</div>
-        <div>Last modified: @LastModified</div>
-        <div>Bytes read: @bytesReadInTotal</div>
-    </div>
-}
-
-
+<div> class="spinner-border" role="status" style="margin-top: 1em" @if (isLoading) { <span class="sr-only">Loading...</span> } </div>
 
 @code {
+
     private bool isDevelopment = false;
-    private Models.InputAddress addressToBeCorrected = new Models.InputAddress();
-    private Models.Address knownGoodAddress = new Models.Address();
+    private InputAddress addressToBeCorrected = new Models.InputAddress();
+    private Address knownGoodAddress = new Models.Address();
     private bool isLoading = false;
+    private string baseUrl = "https://localhost:7207";
+
     private async Task HandleValidSubmit()
     {
         // loading circle
+        Console.WriteLine("Loading...");
+
         isLoading = true;
 
         string json = JsonSerializer.Serialize(addressToBeCorrected);
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await Http.PostAsJsonAsync("https://localhost:7207/InputAddresses", addressToBeCorrected);
-
+        var response = await Http.PostAsJsonAsync(baseUrl + "/InputAddresses", addressToBeCorrected);
 
         isLoading = false;
 
@@ -129,111 +103,23 @@
         {
             Console.WriteLine("Address corrected successfully");
 
-            //pring the response content
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-
-            ResponseService.CorrectedAddress = await response.Content.ReadFromJsonAsync<Models.InputAddress>();
+            ResponseService.CorrectedAddress = await response.Content.ReadFromJsonAsync<InputAddress>();
 
             // print the corrected address
             if (ResponseService.CorrectedAddress == null)
             {
                 Console.WriteLine("Error reading from json");
             }
+            else if (ResponseService.CorrectedAddress.Result == 0)
+                NavigationManager.NavigateTo("/failure");
             else
-                Console.WriteLine(ResponseService.CorrectedAddress.Number);
-
-            NavigationManager.NavigateTo("/success");
+                NavigationManager.NavigateTo("/success");
         }
         else
         {
             Console.WriteLine(response.StatusCode);
             Console.WriteLine("Address correction failed");
             NavigationManager.NavigateTo("/failure");
-        }
-
-    }
-
-    public string FileName { get; set; } = string.Empty;
-    public long FileSize { get; set; }
-    public long bytesReadInTotal;
-    public string FileType { get; set; } = string.Empty;
-    public DateTimeOffset LastModified { get; set; }
-    // max file size = 2gb
-    private const long MAX_FILE_SIZE = 2147483648;
-
-    public async Task HandleFileSelected(InputFileChangeEventArgs e)
-    {
-        var browserFile = e.File;
-        int lineNumber = 0;
-
-        if (browserFile != null)
-        {
-            FileSize = browserFile.Size;
-            FileType = browserFile.ContentType;
-            FileName = browserFile.Name;
-            var addresses = new List<Models.Address>();
-            bytesReadInTotal = 0;
-
-            try
-            {
-                Console.WriteLine("Reading file");
-
-                using var streamReader = new StreamReader(browserFile.OpenReadStream(MAX_FILE_SIZE));
-
-                string line;
-                while ((line = await streamReader.ReadLineAsync()) != null)
-                {
-                    bytesReadInTotal += line.Length;
-                    if (line.Contains("Number")) continue;
-                    try
-                    {
-                        lineNumber++;
-
-                        string[] values = line.Split(',');
-                        var knownGoodAddress = new Models.Address
-                            {
-                                Id = (values[0]),
-                                Number = int.Parse(values[1]),
-                                Street = values[2],
-                                Unit = values[3],
-                                Longitude = values[4],
-                                Latitude = values[5],
-                                City = values[6],
-                                Postcode = int.Parse(values[7]),
-                                Region = values[8],
-                                Accuracy = int.Parse(values[9])
-                            };
-
-
-                        addresses.Add(knownGoodAddress);
-
-                        if (lineNumber % 10000 == 0)
-                        {
-                            // post list of addresses to the server
-                            // find all non-unique Ids and remove them
-                            var json = JsonSerializer.Serialize(addresses);
-                            var content = new StringContent(json, Encoding.UTF8, "application/json");
-                            var response = await Http.PostAsJsonAsync("https://localhost:7207/Addresses", addresses);
-
-                            // clear the list
-                            addresses.Clear();
-
-                            //print the response
-                            Console.WriteLine(response.StatusCode);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // log the error
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            isLoading = false;
         }
     }
 }

@@ -15,9 +15,13 @@ namespace AddressCorrectionTool.Controllers
             {
                 return "No address to display";
             }
-            else
+            else if (CorrectedAddress.Unit != null)
             {
                 return $"UNIT {CorrectedAddress.Unit} of {CorrectedAddress.Number} {CorrectedAddress.Street} {CorrectedAddress.City} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
+            }
+            else
+            {
+                return $"{CorrectedAddress.Number} {CorrectedAddress.Street} {CorrectedAddress.City} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
             }
         }
 
