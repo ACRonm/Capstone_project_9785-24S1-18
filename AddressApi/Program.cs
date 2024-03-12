@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
@@ -33,13 +32,6 @@ builder.Services.AddScoped<AddressCorrectionService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
@@ -47,6 +39,7 @@ using (var serviceScope = app.Services.CreateScope())
 
     addresses = GetAddresses(context);
 }
+
 
 // get addresses from csv
 app.MapGet("/Addresses/csv", (AddressContext context) =>
@@ -97,6 +90,23 @@ app.MapPost("/Addresses", (List<Address> addresses, AddressContext context) =>
 })
 .WithName("CreateAddress")
 .WithOpenApi();
+
+// post metrics
+app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
+{
+    if (metrics != null)
+    {
+        context.Add(metrics);
+        context.SaveChanges();
+        return Results.Ok();
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+})
+    .WithName("CreateMetrics")
+    .WithOpenApi();
 
 // Get address by id
 app.MapGet("/Addresses/{id}", (string id, AddressContext context) =>
