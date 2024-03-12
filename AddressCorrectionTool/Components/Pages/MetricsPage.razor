@@ -62,14 +62,14 @@
 {
     private bool isLoaded = false;
     private string baseUrl = "https://localhost:7207";
-    private Metrics metrics = new Models.Metrics();
     private int[] metricsArray = new int[3];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics");
+
+            Metrics metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics") ?? new Metrics();
 
 
             if (metrics != null)

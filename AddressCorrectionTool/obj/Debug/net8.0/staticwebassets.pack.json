@@ -5,8 +5,20 @@
       "PackagePath": "staticwebassets\\AddressCorrectionTool.bundle.scp.css"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-192x192.png",
+      "PackagePath": "staticwebassets\\android-chrome-192x192.png"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-512x512.png",
+      "PackagePath": "staticwebassets\\android-chrome-512x512.png"
+    },
+    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\apple-touch-icon.png",
+      "PackagePath": "staticwebassets\\apple-touch-icon.png"
     },
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -17,32 +29,28 @@
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.png",
-      "PackagePath": "staticwebassets\\favicon.png"
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
+      "PackagePath": "staticwebassets\\favicon-16x16.png"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-32x32.png",
+      "PackagePath": "staticwebassets\\favicon-32x32.png"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
       "PackagePath": "staticwebassets\\images\\UC_Logo.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\compass.png",
-      "PackagePath": "staticwebassets\\images\\compass.png"
-    },
-    {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\node-v20.11.1-x64 (1).msi",
-      "PackagePath": "staticwebassets\\images\\node-v20.11.1-x64 (1).msi"
-    },
-    {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\node-v20.11.1-x64.msi",
-      "PackagePath": "staticwebassets\\images\\node-v20.11.1-x64.msi"
-    },
-    {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\syncfusionessentialaspnetcore-js2webinstaller.exe",
-      "PackagePath": "staticwebassets\\images\\syncfusionessentialaspnetcore-js2webinstaller.exe"
-    },
-    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
       "PackagePath": "staticwebassets\\javascript\\charts.js"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\site.webmanifest",
+      "PackagePath": "staticwebassets\\site.webmanifest"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AddressCorrectionTool.Microsoft.AspNetCore.StaticWebAssets.props",
