@@ -13,16 +13,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
 {
-    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
-    connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    builder.Services.AddSingleton<SecretsService>();
+
+    SecretsService secretsService = new SecretsService(builder.Configuration);
+     
+    connection = secretsService.GetSecret("ConnectionString");
 }
 else
 {
-    connection = Environment.GetEnvironmentVariable("DefaultConnection");
+    connection = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 
 builder.Services.AddDbContext<AddressContext>(options =>
@@ -32,6 +37,12 @@ builder.Services.AddScoped<AddressCorrectionService>();
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
@@ -39,7 +50,6 @@ using (var serviceScope = app.Services.CreateScope())
 
     addresses = GetAddresses(context);
 }
-
 
 // get addresses from csv
 app.MapGet("/Addresses/csv", (AddressContext context) =>
