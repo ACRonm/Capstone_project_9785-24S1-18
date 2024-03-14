@@ -117,6 +117,9 @@ namespace AddressApi.Migrations
                     b.Property<int>("FailedAddresses")
                         .HasColumnType("int");
 
+                    b.Property<int>("MiscorrectedAddresses")
+                        .HasColumnType("int");
+
                     b.Property<int>("TotalAddresses")
                         .HasColumnType("int");
 

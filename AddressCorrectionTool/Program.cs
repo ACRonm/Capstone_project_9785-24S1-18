@@ -3,10 +3,10 @@ using AddressCorrectionTool.Components.Account;
 using AddressCorrectionTool.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using AddressCorrectionTool.Services;
 using AddressCorrectionTool.Controllers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,20 +29,29 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-
-var connectionString = String.Empty;
+string apiKey = string.Empty;
+var connectionString = string.Empty;
 
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddSingleton<SecretsService>();
-
     SecretsService secretsService = new(builder.Configuration);
 
     connectionString = secretsService.GetSecret("ConnectionString");
+    apiKey = secretsService.GetSecret("ApiKey");
+    builder.Services.AddSingleton(new ApiManager(apiKey));
 }
 else
 {
     connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    apiKey = builder.Configuration["ApiKey"];
+
+    if (string.IsNullOrEmpty(apiKey))
+    {
+        throw new InvalidOperationException("SendGridKey is missing from configuration");
+    }
+    builder.Services.AddSingleton(new ApiManager(apiKey));
 }
 
 
@@ -61,6 +70,7 @@ builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
 
 builder.Services.AddSingleton<ResponseService>();
+builder.Services.AddTransient<BatchCorrectionService>();
 
 var app = builder.Build();
 

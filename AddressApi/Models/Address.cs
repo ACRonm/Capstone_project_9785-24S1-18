@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AddressApi.Models
 {
+
     [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region))]
     public class Address
     {
@@ -44,6 +45,7 @@ namespace AddressApi.Models
         public int TotalAddresses { get; set; }
         public int CorrectedAddresses { get; set; }
         public int FailedAddresses { get; set; }
+        public int MiscorrectedAddresses { get; set; }
     }
 
 }

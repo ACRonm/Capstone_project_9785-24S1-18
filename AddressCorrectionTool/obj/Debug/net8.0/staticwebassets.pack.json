@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\general.css",
+      "PackagePath": "staticwebassets\\css\\general.css"
+    },
+    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
       "PackagePath": "staticwebassets\\favicon-16x16.png"
     },
@@ -47,6 +51,14 @@
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
       "PackagePath": "staticwebassets\\javascript\\charts.js"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\file_download.js",
+      "PackagePath": "staticwebassets\\javascript\\file_download.js"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",
+      "PackagePath": "staticwebassets\\sample.csv"
     },
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\site.webmanifest",

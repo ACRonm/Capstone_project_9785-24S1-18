@@ -1,19 +1,29 @@
 using System.ComponentModel.DataAnnotations;
+using CsvHelper.Configuration.Attributes;
 
 namespace AddressCorrectionTool.Models;
 
-
 public class Address
 {
+    [Name("id")]
     public string? Id { get; set; }
-    public int Number { get; set; }
+    [Name("number")]
+    public string? Number { get; set; }
+    [Name("street")]
     public string? Street { get; set; }
+    [Name("unit")]
     public string? Unit { get; set; }
+    [Name("lon")]
     public string? Longitude { get; set; }
+    [Name("lat")]
     public string? Latitude { get; set; }
+    [Name("city")]
     public string? City { get; set; }
+    [Name("postcode")]
     public int Postcode { get; set; }
+    [Name("region")]
     public string? Region { get; set; }
+    [Name("accuracy")]
     public int Accuracy { get; set; }
 }
 

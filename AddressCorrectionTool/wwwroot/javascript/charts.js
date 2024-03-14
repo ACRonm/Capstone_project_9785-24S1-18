@@ -14,7 +14,6 @@ async function createMetricsChart(data) {
                 datasets: [
                     {
                         data: [
-                            data[0],
                             data[1],
                             data[2]
                         ],
@@ -28,7 +27,7 @@ async function createMetricsChart(data) {
                         datalabels: {
                             color: '#ffff',
                             font: {
-                                size: '25',
+                                size: '20',
                                 weight: 'bold'
                             }
 
@@ -36,13 +35,12 @@ async function createMetricsChart(data) {
                         borderWidth: 1
                     }
                 ],
-                labels: ['Total Addresses', 'Corrected Addresses', 'Failed Addresses']
+                labels: ['Corrected Addresses', 'Failed Addresses']
             },
             options: {
                 responsive: true,
                 legend: {
-                    display: true,
-                    position: 'bottom'
+                    position: 'bottom',
                 },
                 title: {
                     display: true,

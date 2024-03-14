@@ -3,6 +3,7 @@ using AddressApi.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 List<Address> addresses = new List<Address>();
 
@@ -15,32 +16,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connection = String.Empty;
-if (builder.Environment.IsDevelopment())
-{
 
-    builder.Services.AddSingleton<SecretsService>();
+string connectionString = String.Empty;
 
-    SecretsService secretsService = new SecretsService(builder.Configuration);
-     
-    connection = secretsService.GetSecret("ConnectionString");
-}
-else
-{
-    connection = builder.Configuration.GetConnectionString("DefaultConnection");
-}
+//if (builder.Environment.IsDevelopment())
+//{
+//    builder.Services.AddSingleton<SecretsService>();
+
+//    SecretsService secretsService = new(builder.Configuration);
+
+//    connectionString = secretsService.GetSecret("ConnectionString");
+//}
+//else
+//{
+connectionString = "Server=tcp:address-correction-server.database.windows.net,1433;Initial Catalog=address-correction-db;Persist Security Info=False;User ID=CloudSA622bf291;Password=datS47fDvK#PZw@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+//}
 
 builder.Services.AddDbContext<AddressContext>(options =>
-    options.UseSqlServer(connection));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<AddressCorrectionService>();
 
 var app = builder.Build();
 
+app.UseSwagger();
+
+
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
 }
 
 using (var serviceScope = app.Services.CreateScope())
@@ -51,55 +56,14 @@ using (var serviceScope = app.Services.CreateScope())
     addresses = GetAddresses(context);
 }
 
-// get addresses from csv
-app.MapGet("/Addresses/csv", (AddressContext context) =>
-{
-    var addressCorrectionService = new AddressCorrectionService(context);
-    var addresses = addressCorrectionService.LoadAddressesFromCsvAsync().Result;
-
-    var count = addresses.Count;
-
-    // insert into db
-    context.AddRange(addresses);
-
-    context.SaveChangesAsync();
-
-    if (addresses != null)
-    {
-        return Results.Ok("Addresses loaded from csv: " + count);
-    }
-    else
-    {
-        return Results.NotFound();
-    }
-
-})
-    .WithName("AddressesFromCsv")
-    .WithOpenApi();
-
-    static List<Address> GetAddresses(AddressContext context)
-    {
-
-        Debug.WriteLine("Getting Addresses");
-        // set timeout to 5 minutes
-        context.Database.SetCommandTimeout(300);
-        return context.Addresses.ToList();
-    }
-
-app.MapPost("/Addresses", (List<Address> addresses, AddressContext context) =>
+static List<Address> GetAddresses(AddressContext context)
 {
 
-    if (addresses != null)
-    {
-        context.AddRange(addresses);
-        context.SaveChanges();
-
-        return Results.Ok();
-    }
-    else { return Results.NotFound(); }
-})
-.WithName("CreateAddress")
-.WithOpenApi();
+    Debug.WriteLine("Getting Addresses");
+    // set timeout to 5 minutes
+    context.Database.SetCommandTimeout(300);
+    return context.Addresses.ToList();
+}
 
 // post metrics
 app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
@@ -118,36 +82,6 @@ app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
     .WithName("CreateMetrics")
     .WithOpenApi();
 
-// Get address by id
-app.MapGet("/Addresses/{id}", (string id, AddressContext context) =>
-{
-    return context.Addresses.Find(id);
-})
-    .WithName("Address")
-    .WithOpenApi();
-
-app.MapDelete("/Addresses/{id}", (string id, AddressContext context) =>
-{
-    var address = context.Addresses.Find(id);
-    if (address != null)
-    {
-        context.Addresses.Remove(address);
-        context.SaveChanges();
-    }
-})
-    .WithName("DeleteAddress")
-    .WithOpenApi();
-
-// delete all addresses
-app.MapDelete("/Addresses", (AddressContext context) =>
-{
-    context.Addresses.RemoveRange(context.Addresses);
-    context.SaveChanges();
-})
-    .WithName("DeleteAllAddresses")
-    .WithOpenApi();
-
-
 app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext context) =>
 {
     //if addresses is empty , get addresses from db
@@ -156,7 +90,7 @@ app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext contex
 
     var addressCorrectionService = new AddressCorrectionService(context);
 
-    var correctedAddress = addressCorrectionService.CorrectAddressAsync(inputAddress, addresses).Result;
+    InputAddress correctedAddress = addressCorrectionService.CorrectAddressAsync(inputAddress, addresses).Result;
 
     context.Add(correctedAddress);
     context.SaveChanges();
@@ -170,6 +104,28 @@ app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext contex
     }
 })
     .WithName("CreateInputAddress")
+    .WithOpenApi();
+
+// mappost batchinputaddresses
+app.MapPost("/BatchInputAddresses", async (Address inputAddress, AddressContext context) =>
+{
+
+    var addressCorrectionService = new AddressCorrectionService(context);
+
+    InputAddress correctedAddresses = await addressCorrectionService.BatchCorrectAddressesAsync(inputAddress, addresses);
+
+    context.AddRange(correctedAddresses);
+    context.SaveChanges();
+    if (correctedAddresses != null)
+    {
+        return Results.Ok(correctedAddresses);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+})
+    .WithName("CreateBatchInputAddresses")
     .WithOpenApi();
 
 //delete all
@@ -197,6 +153,23 @@ app.MapGet("/Metrics", (AddressContext context) =>
     }
 })
     .WithName("Metrics")
+    .WithOpenApi();
+
+//mapget addresses
+app.MapGet("/SampleAddresses", (AddressContext context) =>
+{
+    // get only first 1000 addresses
+    var addresses = context.Addresses.Take(1000).ToList();
+    if (addresses != null)
+    {
+        return Results.Ok(addresses);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+})
+    .WithName("Addresses")
     .WithOpenApi();
 
 app.UseHttpsRedirection();

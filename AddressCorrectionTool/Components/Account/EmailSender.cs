@@ -16,6 +16,12 @@ namespace AddressCorrectionTool.Components.Account
         {
             _logger = logger;
             Options = optionsAccessor.Value;
+
+            if (string.IsNullOrEmpty(Options.SendGridKey))
+            {
+                throw new InvalidOperationException("No SendGridKey set.");
+            }
+
         }
 
         public AuthMessageSenderOptions Options { get; } //Set with Secret Manager.
@@ -40,6 +46,12 @@ namespace AddressCorrectionTool.Components.Account
 
         private async Task SendEmailAsync(string email, string subject, string htmlContent)
         {
+
+            if (string.IsNullOrEmpty(Options.SendGridKey))
+            {
+                // get the key from azure app service env variables
+                Options.SendGridKey = Environment.GetEnvironmentVariable("SendGridKey");
+            }
 
             Console.WriteLine("Sending email");
             var client = new SendGridClient(Options.SendGridKey);

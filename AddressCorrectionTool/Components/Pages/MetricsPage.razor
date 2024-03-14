@@ -15,38 +15,44 @@
 @page "/metrics/"
 
 @inject HttpClient Http
+@inject ApiManager ApiManager
 @inject IJSRuntime JSRuntime
 
 @rendermode InteractiveServer
+
+<PageTitle>Dashboard</PageTitle>
+
+<link rel="stylesheet" href="/css/general.css">
+
 
 <div class="container">
     <h2 class="text-center mt-4">Address Correction Dashboard</h2>
     <p class="text-center">Here you can view the metrics related to address correction.</p>
 
-    <div class="row mt-5">
+    <div class="row mt-5 d-flex align-items-stretch">
         <div class="col-lg-6">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title text-center">Metrics Chart</h5>
                     @if (isLoaded)
                     {
                         <canvas id="metrics-chart"></canvas>
+
                     }
                     else
                     {
+                        <div>Loading...</div>
                         // display loading spinner
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     }
 
-
-
                 </div>
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title text-center"></h5>
                     <canvas id=""></canvas>
@@ -60,14 +66,23 @@
 
 @code
 {
-    private bool isLoaded = false;
-    private string baseUrl = "https://localhost:7207";
+    private bool isLoaded;
+    private string baseUrl = "https://addressapi-api.azure-api.net/v1";
     private int[] metricsArray = new int[3];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            if (ApiManager == null)
+            {
+                Console.WriteLine("ApiManager is null");
+                return;
+            }
+            string apiKey = ApiManager.ApiKey;
+
+            Http.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
+
             Metrics metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics") ?? new Metrics();
 
 

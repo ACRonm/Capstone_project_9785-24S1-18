@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components
 @using AddressCorrectionTool.Controllers
+@using Microsoft.JSInterop
 
 @rendermode InteractiveServer
 
@@ -17,84 +18,142 @@
 @inject NavigationManager NavigationManager
 @inject ResponseService ResponseService
 @inject ILogger<AddressCorrection> Logger
+@inject IJSRuntime JSRuntime
+@inject BatchCorrectionService BatchCorrectionService
+
 
 @page "/address-correction"
 
 <PageTitle>Address Correction</PageTitle>
 
-<h3>Submit Address to be corrected</h3>
 
-<EditForm Model="@addressToBeCorrected" FormName="addressForm" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
+<link rel="stylesheet" href="/css/general.css">
 
-    <div class="form-group col-md-4">
-        <label for="Number">Number</label>
-        <InputText id="Number" class="form-control" @bind-Value="@addressToBeCorrected.Number" />
-        <ValidationMessage For="@(() => addressToBeCorrected.Number)" />
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="card-title">Submit Address</h3>
+
+                <section class="">
+
+
+                    <EditForm Model="@addressToBeCorrected" FormName="addressForm" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="Unit">Apartment/Flat/Unit Number</label>
+                            <InputText id="Unit" class="form-control" @bind-Value="@addressToBeCorrected.Unit" />
+                            <ValidationMessage For="@(() => addressToBeCorrected.Unit)" />
+                        </div>
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="Number">Street number</label>
+                            <InputText id="Number" class="form-control" @bind-Value="@addressToBeCorrected.Number" />
+                            <ValidationMessage For="@(() => addressToBeCorrected.Number)" />
+                        </div>
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="Street">Street name (examples: Graham Avenue, George Street)</label>
+                            <InputText id="Street" class="form-control" @bind-Value="@addressToBeCorrected.Street" />
+                            <ValidationMessage For="@(() => addressToBeCorrected.Street)" />
+                        </div>
+
+
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="City">Suburb/Locality</label>
+                            <InputText id="City" class="form-control" @bind-Value="@addressToBeCorrected.City" />
+                            <ValidationMessage For="@(() => addressToBeCorrected.City)" />
+                        </div>
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="Region">State/Territory</label>
+                            <select id="Region" class="form-control" @bind="@addressToBeCorrected.Region">
+                                <option value="NSW">NSW</option>
+                                <option value="VIC">VIC</option>
+                                <option value="QLD">QLD</option>
+                                <option value="WA">WA</option>
+                                <option value="SA">SA</option>
+                                <option value="TAS">TAS</option>
+                                <option value="ACT">ACT</option>
+                                <option value="NT">NT</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-xl-6 p-0">
+                            <label for="Postcode">Postcode</label>
+                            <InputNumber id="Postcode" class="form-control"
+                                @bind-Value="@addressToBeCorrected.Postcode" />
+                            <ValidationMessage For="@(() => addressToBeCorrected.Postcode)" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
+                    </EditForm>
+                </section>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group col-md-4">
-        <label for="Street">Street</label>
-        <InputText id="Street" class="form-control" @bind-Value="@addressToBeCorrected.Street" />
-        <ValidationMessage For="@(() => addressToBeCorrected.Street)" />
+    <div class="col-md-6 mt-3 mt-md-0">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="card-title">Batch Upload</h3>
+                <p class="col-xl-6 p-0">
+                    Upload a CSV file containing addresses to be corrected. The file should contain the following
+                    columns: id, number, street, unit, lon, lat, city, postcode, region, accuracy
+                    <br>
+                </p>
+                @* download sample file *@
+                <a href="/sample.csv" class="btn btn-success" download>Download
+                    sample file</a>
+                <EditForm Model="@addressToBeCorrected" OnValidSubmit="HandleBatchUpload" class="pt-3">
+                    <div class="custom-file col-xl-6">
+                        <InputFile id="csvFile" OnChange="HandleFileSelected" style="display:none" />
+                        <label class="custom-file-label" for="csvFile">@placeHolder</label>
+                    </div>
+                    <div style="margin-top:1em">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger" style="margin-top:1em">@ErrorMessage</div>
+                    }
+                </EditForm>
+                <progress id="progressBar" max="100" value="0"></progress>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group col-md-4">
-        <label for="Unit">Unit</label>
-        <InputText id="Unit" class="form-control" @bind-Value="@addressToBeCorrected.Unit" />
-        <ValidationMessage For="@(() => addressToBeCorrected.Unit)" />
-    </div>
-
-    <div class="form-group col-md-4">
-        <label for="City">City</label>
-        <InputText id="City" class="form-control" @bind-Value="@addressToBeCorrected.City" />
-        <ValidationMessage For="@(() => addressToBeCorrected.City)" />
-    </div>
-
-    <div class="form-group col-md-4">
-        <label for="Postcode">Postcode</label>
-        <InputNumber id="Postcode" class="form-control" @bind-Value="@addressToBeCorrected.Postcode" />
-        <ValidationMessage For="@(() => addressToBeCorrected.Postcode)" />
-    </div>
-
-    <div class="form-group col-md-4">
-        <label for="Region">Region</label>
-        <select id="Region" class="form-control" @bind="@addressToBeCorrected.Region">
-            <option value="NSW">NSW</option>
-            <option value="VIC">VIC</option>
-            <option value="QLD">QLD</option>
-            <option value="WA">WA</option>
-            <option value="SA">SA</option>
-            <option value="TAS">TAS</option>
-            <option value="ACT">ACT</option>
-            <option value="NT">NT</option>
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-primary" style="margin-top:1em">Submit</button>
-</EditForm>
-<div>
-    <div class="spinner-border" role="status" style="margin-top: 1em"></div> @if (isLoading)
-    {
-        <span class="sr-only">Loading...</span>
-    }
 </div>
-@code {
 
+<script src="/javascript/file_download.js"></script>
+
+@code {
+    // get api key from ApiManager
+    [Inject]
+    public ApiManager? ApiManager { get; set; }
+    private IBrowserFile? selectedFile;
+    string placeHolder = "Choose file";
+    string? ErrorMessage { get; set; }
     private InputAddress addressToBeCorrected = new Models.InputAddress();
     private bool isLoading = false;
-    private string baseUrl = "https://localhost:7207";
+    private string baseUrl = "https://addressapi-api.azure-api.net/v1";
 
     private async Task HandleValidSubmit()
     {
-        // loading circle
-        Console.WriteLine("Loading...");
+        if (ApiManager == null)
+        {
+            Console.WriteLine("ApiManager is null");
+            return;
+        }
+        string apiKey = ApiManager.ApiKey;
 
         isLoading = true;
-
         string json = JsonSerializer.Serialize(addressToBeCorrected);
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        Http.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
 
         var response = await Http.PostAsJsonAsync(baseUrl + "/InputAddresses", addressToBeCorrected);
 
@@ -122,5 +181,56 @@
             Console.WriteLine("Address correction failed");
             NavigationManager.NavigateTo("/failure");
         }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var fileInfo = new System.IO.FileInfo(e.File.Name);
+        var fileExtension = fileInfo.Extension;
+
+        if (fileExtension != ".csv")
+        {
+            ErrorMessage = "Invalid file type. Please upload a CSV file.";
+            placeHolder = "Choose file";
+            return;
+        }
+
+        selectedFile = e.File;
+        ErrorMessage = null;
+        placeHolder = e.File.Name;
+    }
+
+    public async Task UpdateProgressBar(float progress)
+    {
+        progress *= 100;
+        await JSRuntime.InvokeVoidAsync("updateProgressBar", progress);
+    }
+
+    private async Task HandleBatchUpload()
+    {
+        Console.WriteLine("Checking file...");
+        if (ErrorMessage != null || selectedFile == null)
+        {
+            if (selectedFile == null)
+                ErrorMessage = "Please select a file to upload.";
+            else if (ErrorMessage == null)
+                ErrorMessage = "Invalid file type. Please upload a CSV file.";
+
+            return;
+        }
+
+        var memoryStream = new MemoryStream();
+
+        await selectedFile.OpenReadStream().CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+
+        using var reader = new StreamReader(memoryStream);
+        var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+
+        List<Address> addressList = csv.GetRecords<Address>().ToList();
+
+        Console.WriteLine("Processing addresses...");
+
+        await BatchCorrectionService.ProcessAddressesAsync(addressList, UpdateProgressBar);
     }
 }

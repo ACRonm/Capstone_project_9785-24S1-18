@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-
 public class SecretsService
 {
     private readonly IConfiguration _configuration;
