@@ -1,3 +1,4 @@
+var metricsChart;
 
 async function createMetricsChart(data) {
 
@@ -6,8 +7,14 @@ async function createMetricsChart(data) {
 
     Chart.register(ChartDataLabels);
 
-    new Chart(
-        document.getElementById('metrics-chart'),
+    if (metricsChart) {
+        metricsChart.destroy();
+    }
+
+    var ctx = document.getElementById('metrics-chart').getContext('2d');
+
+    metricsChart = new Chart(
+        ctx,
         {
             type: 'doughnut',
             data: {
@@ -19,7 +26,7 @@ async function createMetricsChart(data) {
                         ],
                         backgroundColor: [
                             // blue colour palette
-                            '#3e95cd',
+                            '#009ABC',
                             '#8e5ea2',
                             '#3cba9f'
 
@@ -39,9 +46,6 @@ async function createMetricsChart(data) {
             },
             options: {
                 responsive: true,
-                legend: {
-                    position: 'bottom',
-                },
                 title: {
                     display: true,
                     text: 'Metrics'

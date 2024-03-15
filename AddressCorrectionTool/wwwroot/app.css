@@ -8,10 +8,26 @@ a,
     color: #006bb7;
 }
 
+.nav-link {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #00A9CF;
+    border-color: #00A9CF;
+}
+
+.card {
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+
+    /* boxshadow for dark bg */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    height: 100%;
+    min-height: 300px;
 }
 
 .btn:focus,

@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\AddressCorrection.css",
+      "PackagePath": "staticwebassets\\css\\AddressCorrection.css"
+    },
+    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\general.css",
       "PackagePath": "staticwebassets\\css\\general.css"
     },
@@ -47,6 +51,10 @@
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
       "PackagePath": "staticwebassets\\images\\UC_Logo.png"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo_sm.png",
+      "PackagePath": "staticwebassets\\images\\UC_Logo_sm.png"
     },
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",

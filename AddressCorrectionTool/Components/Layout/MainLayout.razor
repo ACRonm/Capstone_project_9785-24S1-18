@@ -12,8 +12,9 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://github.com/ACRonm/Capstone_project_9785-24S1-18" target="_blank">View Source &#x279C;</a>
+        <div class="top-row px-4 bg-dark" style="border-bottom: 1px solid #2B3035;">
+            <a class="link-light" href="https://github.com/ACRonm/Capstone_project_9785-24S1-18" target="_blank">View
+                Source &#x279C;</a>
         </div>
         <article class="content px-4">
             @Body
@@ -26,14 +27,3 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
-
-@code {
-    // set dark mode
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("setDarkMode");
-        }
-    }
-}

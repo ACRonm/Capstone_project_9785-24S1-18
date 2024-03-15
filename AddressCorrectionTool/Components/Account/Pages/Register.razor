@@ -5,7 +5,10 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Authorization
 @using AddressCorrectionTool.Data
+
+@attribute [Authorize]
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -15,7 +18,11 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
+
 <PageTitle>Register</PageTitle>
+
+
+
 
 <h1>Register</h1>
 

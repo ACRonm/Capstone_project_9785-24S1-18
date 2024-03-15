@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TEM+g4IzQYN7Z3PPHc0mmARyi/N7fGsj+o+p69pMx2g=",
+  "Hash": "TnLVP9xe5bCwMh6FBCgZZopV6bI8BYw+furQjLLHvjc=",
   "Source": "AddressCorrectionTool",
   "BasePath": "_content/AddressCorrectionTool",
   "Mode": "Default",
@@ -169,6 +169,25 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\AddressCorrection.css",
+      "SourceId": "AddressCorrectionTool",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
+      "BasePath": "_content/AddressCorrectionTool",
+      "RelativePath": "css/AddressCorrection.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\AddressCorrection.css"
+    },
+    {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\general.css",
       "SourceId": "AddressCorrectionTool",
       "SourceType": "Discovered",
@@ -243,6 +262,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo_sm.png",
+      "SourceId": "AddressCorrectionTool",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
+      "BasePath": "_content/AddressCorrectionTool",
+      "RelativePath": "images/UC_Logo_sm.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\UC_Logo_sm.png"
     },
     {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",

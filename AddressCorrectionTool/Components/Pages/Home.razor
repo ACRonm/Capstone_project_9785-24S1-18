@@ -3,75 +3,73 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="jumbotron d-flex align-items-center flex-column flex-md-row"
-    style="background-color: lightblue; color: #58585B; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
-    <!-- Add flex utilities here -->
-    <div class="text-center text-md-left"> <!-- Wrap text in a div -->
-        <h1 class="display-4">University of Canberra X ABS</h1>
-        <p class="lead">Address Repair Tool</p>
-
+<div class="container py-4">
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <div class="row">
+                <div class="col-md-6 text-md-left "> <!-- Wrap text in a div -->
+                    <h1 class="display-5 fw-bold">University of Canberra
+                        <br>
+                        <span class="py-3" style="color: #00A9CF;"> X </span>
+                        <br>
+                        ABS
+                    </h1>
+                    <p class="fs-4">Address Repair Tool</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="images/UC_logo_sm.png" alt="University Logo"
+                        class="img-fluid mx-auto d-block mt-3 mt-md-0">
+                </div>
+            </div>
+        </div>
     </div>
-    <img src="images/UC_logo.png" alt="University Logo" class="img-fluid mx-auto d-block mt-3 mt-md-0">
-    <!-- Add this line and move it to the right with ml-auto -->
+
+    <div class="row card-row">
+        <div class="col-xl-4 mt-3">
+            <div class="card">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Repair some addresses!</h5>
+                    <p class="card-text flex-grow-1">This tool allows you to repair addresses by correcting using fuzzy
+                        string matching. We use a database of known Australian addresses. Just input the address you
+                        want to
+                        correct and let the tool do the rest!</p>
+                    <a href="address-correction" class="btn btn-primary mt-auto btn-limited-width">Address repair</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 mt-3 mt-xl-3">
+            <div class="card">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Metrics</h5>
+                    <p class="card-text flex-grow-1">Here you can view the performance metrics of our address correction
+                        tool.</p>
+                    <a href="metrics" class="btn btn-primary mt-auto btn-limited-width">View Metrics</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 mt-3 mt-xl-3">
+            <div class="card">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Licenses</h5>
+                    <p class="card-text flex-grow-1">This software uses free and open source licenses. Check them out
+                        here.
+                    </p>
+                    <a href="licenses" class="btn btn-primary mt-auto btn-limited-width">View Licenses</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-<div class="row card-row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Repair some addresses!</h5>
-                <p class="card-text flex-grow-1">This tool allows you to repair addresses by correcting using fuzzy
-                    string matching. We use a database of known Australian addresses. Just input the address you want to
-                    correct and let the tool do the rest!</p>
-                <a href="address-correction" class="btn btn-primary mt-auto btn-limited-width">Address repair</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Metrics</h5>
-                <p class="card-text flex-grow-1">Here you can view the performance metrics of our address correction
-                    tool.</p>
-                <a href="metrics" class="btn btn-primary mt-auto btn-limited-width">View Metrics</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Licenses</h5>
-                <p class="card-text flex-grow-1">This software uses free and open source licenses. Check them out here.
-                </p>
-                <a href="licenses" class="btn btn-primary mt-auto btn-limited-width">View Licenses</a>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 <style>
     .btn-limited-width {
         width: auto;
         max-width: 200px;
-    }
-</style>
-
-<style>
-    .card-row {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .card-row>div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card {
-        height: 100%;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 </style>
 
