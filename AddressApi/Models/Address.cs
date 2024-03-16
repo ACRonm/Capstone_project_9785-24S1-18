@@ -36,7 +36,8 @@ namespace AddressApi.Models
         public int Result { get; set; }
         public float? Score { get; set; }
         public long? ProcessingTime { get; set; }
-        public DateTime? TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
+        
     }
 
     public class Metrics

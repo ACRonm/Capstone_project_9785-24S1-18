@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AddressApi.Migrations
 {
     [DbContext(typeof(AddressContext))]
-    [Migration("20240316112010_AddProcessingTimeAndTimeStamp")]
-    partial class AddProcessingTimeAndTimeStamp
+    [Migration("20240316112908_RemoveTwo")]
+    partial class RemoveTwo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,9 +81,6 @@ namespace AddressApi.Migrations
                     b.Property<int>("Postcode")
                         .HasColumnType("int");
 
-                    b.Property<long?>("ProcessingTime")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(450)");
 
@@ -95,9 +92,6 @@ namespace AddressApi.Migrations
 
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("TimeStamp")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
