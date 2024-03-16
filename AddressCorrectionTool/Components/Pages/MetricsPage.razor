@@ -1,5 +1,4 @@
 @using Microsoft.JSInterop
-@using AddressCorrectionTool.Controllers
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Components.Forms
@@ -14,8 +13,8 @@
 
 @page "/metrics/"
 
+@inject IConfiguration Configuration
 @inject HttpClient Http
-@inject ApiManager ApiManager
 @inject IJSRuntime JSRuntime
 
 @rendermode InteractiveServer
@@ -77,19 +76,16 @@
 @code
 {
     private bool isLoaded;
-    private string baseUrl = "https://addressapi-api.azure-api.net/v1";
+    private string? baseUrl;
+    private string? apiKey;
     private int[] metricsArray = new int[3];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (ApiManager == null)
-            {
-                Console.WriteLine("ApiManager is null");
-                return;
-            }
-            string apiKey = ApiManager.ApiKey;
+            baseUrl = Configuration["ApiUrl"];
+            apiKey = Configuration["ApiKey"];
 
             Http.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
 

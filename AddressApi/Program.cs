@@ -42,10 +42,9 @@ var app = builder.Build();
 app.UseSwagger();
 
 
-
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 using (var serviceScope = app.Services.CreateScope())
@@ -53,7 +52,16 @@ using (var serviceScope = app.Services.CreateScope())
     var services = serviceScope.ServiceProvider;
     var context = services.GetRequiredService<AddressContext>();
 
-    addresses = GetAddresses(context);
+    if (app.Environment.IsDevelopment())
+    {
+       AddressCorrectionService addressCorrectionService = new(context);
+       addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
+        
+        Debug.WriteLine("Number of addresses: " + addresses.Count);
+
+    }
+    else
+        addresses = GetAddresses(context);
 }
 
 static List<Address> GetAddresses(AddressContext context)

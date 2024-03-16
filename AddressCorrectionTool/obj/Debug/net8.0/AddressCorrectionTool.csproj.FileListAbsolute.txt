@@ -294,5 +294,3 @@ e:\University_of_Canberra\Semester_6\Capstone\Capstone_project_9785-24S1-18\Addr
 e:\University_of_Canberra\Semester_6\Capstone\Capstone_project_9785-24S1-18\AddressCorrectionTool\obj\Debug\net8.0\AddressCorrectionTool.pdb
 e:\University_of_Canberra\Semester_6\Capstone\Capstone_project_9785-24S1-18\AddressCorrectionTool\obj\Debug\net8.0\AddressCorrectionTool.genruntimeconfig.cache
 e:\University_of_Canberra\Semester_6\Capstone\Capstone_project_9785-24S1-18\AddressCorrectionTool\obj\Debug\net8.0\ref\AddressCorrectionTool.dll
-D:\University\Capstone\Capstone_project_9785-24S1-18\AddressCorrectionTool\bin\Debug\net8.0\package-lock.json
-D:\University\Capstone\Capstone_project_9785-24S1-18\AddressCorrectionTool\bin\Debug\net8.0\package.json

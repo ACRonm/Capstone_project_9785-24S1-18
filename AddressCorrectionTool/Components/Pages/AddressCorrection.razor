@@ -7,13 +7,15 @@
 @using System.Net.Http
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components
-@using AddressCorrectionTool.Controllers
 @using Microsoft.JSInterop
+@using AddressCorrectionTool.Services
+
 
 @rendermode InteractiveServer
 
 @attribute [Authorize]
 
+@inject IConfiguration Configuration
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ResponseService ResponseService
@@ -170,31 +172,28 @@
 <script src="/javascript/file_download.js"></script>
 
 @code {
-    // get api key from ApiManager
-    [Inject]
-    public ApiManager? ApiManager { get; set; }
     private IBrowserFile? selectedFile;
     string placeHolder = "Choose file";
     string? ErrorMessage { get; set; }
     private InputAddress addressToBeCorrected = new Models.InputAddress();
     private bool isLoading = false;
-    private string baseUrl = "https://addressapi-api.azure-api.net/v1";
+    private string? baseUrl;
+    private string? apiKey;
+
 
     private async Task HandleValidSubmit()
     {
-        if (ApiManager == null)
-        {
-            Console.WriteLine("ApiManager is null");
-            return;
-        }
-        string apiKey = ApiManager.ApiKey;
+        baseUrl = Configuration["ApiUrl"];
+        apiKey = Configuration["ApiKey"];
+
+        Console.WriteLine($"{baseUrl}/InputAddresses");
 
         isLoading = true;
         string json = JsonSerializer.Serialize(addressToBeCorrected);
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         Http.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
-        var response = await Http.PostAsJsonAsync(baseUrl + "/InputAddresses", addressToBeCorrected);
+        var response = await Http.PostAsJsonAsync($"{baseUrl}/InputAddresses", addressToBeCorrected);
 
         isLoading = false;
 

@@ -34,8 +34,9 @@ namespace AddressApi.Models
         public int Postcode { get; set; }
         public string? Region { get; set; }
         public int Result { get; set; }
-        public float Score { get; set; }
-        public TimeSpan ProcessingTime { get; set; }
+        public float? Score { get; set; }
+        public long? ProcessingTime { get; set; }
+        public DateTime? TimeStamp { get; set; }
     }
 
     public class Metrics

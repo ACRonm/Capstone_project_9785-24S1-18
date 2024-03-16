@@ -1,10 +1,20 @@
+import csv
 import pandas as pd
 
-# Load the CSV file
-df = pd.read_csv('./data/au.csv')
+input_file = "./data/au.csv"
 
-# Convert the 'postcode' column to integer
-df['postcode'] = df['postcode'].fillna(0).astype(int)
+output_file = "./data/au_deduplicated.csv"
 
-# Save the dataframe back to CSV
-df.to_csv('./data/au.csv', index=False)
+data = pd.read_csv(input_file, header=0, encoding="utf-8")
+
+# remove all duplicates if they have the same "street" and "postcode" and "city"
+
+data = data.drop_duplicates(
+    subset=["street", "postcode", "city"], keep="first")
+
+data = data[data["postcode"].notna()]
+data["postcode"] = data["postcode"].astype(int)
+
+data.to_csv(output_file, index=False)
+
+print("Deduplicated data is saved to", output_file)

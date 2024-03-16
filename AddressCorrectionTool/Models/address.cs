@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration.Attributes;
 
 namespace AddressCorrectionTool.Models;
@@ -43,11 +44,14 @@ public class InputAddress
     [Required]
     public string? Region { get; set; }
     public int? Result { get; set; } = 0;
+    public TimeSpan? Time { get; set; }
 }
 public class Metrics
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public int TotalAddresses { get; set; }
     public int CorrectedAddresses { get; set; }
     public int FailedAddresses { get; set; }
+    public int MiscorrectedAddresses { get; set; }
 }

@@ -1,0 +1,30 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using AddressCorrectionTool.Models;
+
+namespace AddressCorrectionTool.Services
+{
+    public class ResponseService
+    {
+        public InputAddress? CorrectedAddress { get; set; }
+
+        public string CorrectedAddressToString()
+        {
+            if (CorrectedAddress == null)
+            {
+                return "No address to display";
+            }
+            else if (CorrectedAddress.Unit != null)
+            {
+                return $"UNIT {CorrectedAddress.Unit} of {CorrectedAddress.Number} {CorrectedAddress.Street} {CorrectedAddress.City} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
+            }
+            else
+            {
+                return $"{CorrectedAddress.Number} {CorrectedAddress.Street} {CorrectedAddress.City} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
+            }
+        }
+
+    }
+
+}

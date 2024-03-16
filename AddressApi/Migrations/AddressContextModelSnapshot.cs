@@ -78,8 +78,8 @@ namespace AddressApi.Migrations
                     b.Property<int>("Postcode")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("ProcessingTime")
-                        .HasColumnType("time");
+                    b.Property<long?>("ProcessingTime")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(450)");
@@ -87,11 +87,14 @@ namespace AddressApi.Migrations
                     b.Property<int>("Result")
                         .HasColumnType("int");
 
-                    b.Property<float>("Score")
+                    b.Property<float?>("Score")
                         .HasColumnType("real");
 
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("TimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");

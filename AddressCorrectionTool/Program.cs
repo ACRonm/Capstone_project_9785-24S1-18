@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AddressCorrectionTool.Services;
-using AddressCorrectionTool.Controllers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,27 +31,14 @@ builder.Services.AddAuthentication(options =>
 string apiKey = string.Empty;
 var connectionString = string.Empty;
 
+// get Connectionstring from user secrets
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddSingleton<SecretsService>();
-    SecretsService secretsService = new(builder.Configuration);
-
-    connectionString = secretsService.GetSecret("ConnectionString");
-    apiKey = secretsService.GetSecret("ApiKey");
-    builder.Services.AddSingleton(new ApiManager(apiKey));
+    var config = builder.Configuration;
+    connectionString = config["ConnectionString"];
 }
 else
-{
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-    apiKey = builder.Configuration["ApiKey"];
-
-    if (string.IsNullOrEmpty(apiKey))
-    {
-        throw new InvalidOperationException("SendGridKey is missing from configuration");
-    }
-    builder.Services.AddSingleton(new ApiManager(apiKey));
-}
+    connectionString = builder.Configuration.GetConnectionString("ConnectionString");
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

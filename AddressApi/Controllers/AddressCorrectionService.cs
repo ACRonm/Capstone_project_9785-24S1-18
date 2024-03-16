@@ -1,12 +1,6 @@
 ﻿using AddressApi.Models;
-using Microsoft.EntityFrameworkCore;
-using FuzzySharp;
 using CsvHelper;
-using System.IO;
-using System.Threading.Tasks;
 using System.Globalization;
-using System.Security.AccessControl;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 
 namespace AddressApi.Controllers
@@ -32,7 +26,8 @@ namespace AddressApi.Controllers
 
         public async Task<InputAddress> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
-            TimeSpan time = new TimeSpan(0, 0, 0, 0, 0);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             AddressCorrectionService addressCorrectionService = new AddressCorrectionService(_context);
             Console.WriteLine("Correcting address...", inputAddress.Street);
@@ -59,30 +54,10 @@ namespace AddressApi.Controllers
                 knownCityNames.Add(address.City);
             }
 
-
             // find the highest match            
             var closestStreetMatchResult = FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames);
 
-            if (closestStreetMatchResult == null)
-            {
-                Debug.WriteLine("Closest street match result: " + 0);
-            }
-            else
-            {
-                Debug.WriteLine("Closest street match result: " + closestStreetMatchResult.Score);
-            }
-
             var closestCityMatchResult = FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames);
-
-            if (closestCityMatchResult == null)
-            {
-                Debug.WriteLine("Closest city match result: " + 0);
-            }
-            else
-            {
-                Debug.WriteLine("Closest city match result: " + closestCityMatchResult.Score);
-            }
-
 
             InputAddress correctedAddress;
 
@@ -91,7 +66,6 @@ namespace AddressApi.Controllers
                 inputAddress.Result = 0;
                 return inputAddress;
             }
-
 
             if (closestStreetMatchResult.Score > 66 && closestCityMatchResult.Score > 66)
             {
@@ -113,7 +87,7 @@ namespace AddressApi.Controllers
                 correctedAddress.Result = 0;
             }
 
-            time = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+              
 
             // increment the metrics
             if (_context.Metrics.Find(1) == null)
@@ -133,6 +107,10 @@ namespace AddressApi.Controllers
             {
                 _context.Metrics.Find(1).CorrectedAddresses++;
             }
+
+            stopwatch.Stop();
+            long timeTaken = stopwatch.ElapsedMilliseconds;
+
 
 
             // increment the "corrected addresses" metric
@@ -158,8 +136,11 @@ namespace AddressApi.Controllers
 
             InputAddress correctedAddress = await CorrectAddressAsync(input, addresses);
 
+            Debug.WriteLine("Address id: " + inputAddress.Id);
+
             // find the address in addresses with the same id
             Address originalAddress = addresses.Find(a => a.Id == inputAddress.Id);
+
 
                 if(originalAddress.City == correctedAddress.City && originalAddress.Street == correctedAddress.Street)
                 {
@@ -178,10 +159,8 @@ namespace AddressApi.Controllers
         }   
 
 
-        public async Task<List<Address>> LoadAddressesFromCsvAsync()
+        public async Task<List<Address>> LoadAddressesFromCsvAsync(AddressContext context)
         {
-            Console.WriteLine("Loading addresses from CSV...");
-
             using (var reader = new StreamReader("./Data/au.csv"))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
