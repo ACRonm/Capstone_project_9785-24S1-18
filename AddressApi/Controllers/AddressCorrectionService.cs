@@ -87,25 +87,24 @@ namespace AddressApi.Controllers
                 correctedAddress.Result = 0;
             }
 
-              
+            Metrics metrics = _context.Metrics.Find(1);
 
-            // increment the metrics
-            if (_context.Metrics.Find(1) == null)
-            {
-                _context.Metrics.Add(new Metrics { TotalAddresses = 1, CorrectedAddresses = 0, FailedAddresses = 0 });
-            }
-            else
-            {
-                _context.Metrics.Find(1).TotalAddresses++;
-            }
 
-            if (correctedAddress != null && correctedAddress.Result == 0)
+
+            if (metrics != null)
             {
-                _context.Metrics.Find(1).FailedAddresses++;
-            }
-            else
-            {
-                _context.Metrics.Find(1).CorrectedAddresses++;
+
+                metrics.TotalAddresses++;
+
+                if (correctedAddress != null && correctedAddress.Result == 0)
+                {
+                    metrics.FailedAddresses++;
+                }
+                else
+                {
+                    metrics.CorrectedAddresses++;
+                }
+
             }
 
             stopwatch.Stop();
@@ -122,17 +121,17 @@ namespace AddressApi.Controllers
         public async Task<InputAddress> BatchCorrectAddressesAsync(Address inputAddress, List<Address> addresses)
         {
             Console.WriteLine("Correcting addresses...");
- 
-                // convert to input address
-                InputAddress input = new InputAddress
-                {
-                    Number = inputAddress.Number,
-                    Street = inputAddress.Street,
-                    Unit = inputAddress.Unit,
-                    City = inputAddress.City,
-                    Postcode = inputAddress.Postcode,
-                    Region = inputAddress.Region
-                };
+
+            // convert to input address
+            InputAddress input = new InputAddress
+            {
+                Number = inputAddress.Number,
+                Street = inputAddress.Street,
+                Unit = inputAddress.Unit,
+                City = inputAddress.City,
+                Postcode = inputAddress.Postcode,
+                Region = inputAddress.Region
+            };
 
             InputAddress correctedAddress = await CorrectAddressAsync(input, addresses);
 
@@ -142,21 +141,21 @@ namespace AddressApi.Controllers
             Address originalAddress = addresses.Find(a => a.Id == inputAddress.Id);
 
 
-                if(originalAddress.City == correctedAddress.City && originalAddress.Street == correctedAddress.Street)
-                {
-                    return correctedAddress;
-                }
-                else // if the corrected address is different from the original address but it was still corrected, then the correction was incorrect. We need to track this, so we increment the miscalculated addresses metric and decrement the corrected addresses metric
-                {
+            if (originalAddress.City == correctedAddress.City && originalAddress.Street == correctedAddress.Street)
+            {
+                return correctedAddress;
+            }
+            else // if the corrected address is different from the original address but it was still corrected, then the correction was incorrect. We need to track this, so we increment the miscalculated addresses metric and decrement the corrected addresses metric
+            {
                 correctedAddress.Result = 0;
                 // increment the miscalcalculated addresses metric
                 _context.Metrics.Find(1).MiscorrectedAddresses++;
                 // decrement the corrected addresses metric
                 _context.Metrics.Find(1).CorrectedAddresses--;
-                }
+            }
 
             return correctedAddress;
-        }   
+        }
 
 
         public async Task<List<Address>> LoadAddressesFromCsvAsync(AddressContext context)
