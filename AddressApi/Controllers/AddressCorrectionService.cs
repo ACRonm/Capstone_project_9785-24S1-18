@@ -24,7 +24,7 @@ namespace AddressApi.Controllers
             return Math.Abs(inputPostcode - postcode) <= 10;
         }
 
-        public async Task<InputAddress> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
+        public async Task<InputAddress?> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -32,7 +32,7 @@ namespace AddressApi.Controllers
             AddressCorrectionService addressCorrectionService = new AddressCorrectionService(_context);
             Console.WriteLine("Correcting address...", inputAddress.Street);
 
-            if (inputAddress.Street == null)
+            if (inputAddress.Street == null || inputAddress.City == null)
             {
                 Console.WriteLine("No street name provided.");
                 return null;
@@ -54,11 +54,15 @@ namespace AddressApi.Controllers
                 knownCityNames.Add(address.City);
             }
 
-            // find the highest match            
-            var closestStreetMatchResult = FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames);
+            var closestStreetMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames));
+            var closestCityMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames));
 
-            var closestCityMatchResult = FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames);
+            // Wait for both tasks to complete
+            Task.WaitAll(closestStreetMatchTask, closestCityMatchTask);
 
+            // Get the results
+            var closestStreetMatchResult = closestStreetMatchTask.Result;
+            var closestCityMatchResult = closestCityMatchTask.Result;
             InputAddress correctedAddress;
 
             if (closestStreetMatchResult == null)
@@ -67,7 +71,7 @@ namespace AddressApi.Controllers
                 return inputAddress;
             }
 
-            if (closestStreetMatchResult.Score > 66 && closestCityMatchResult.Score > 66)
+            if (closestStreetMatchResult?.Score > 66 && closestCityMatchResult?.Score > 66)
             {
                 correctedAddress = new InputAddress
                 {
@@ -89,8 +93,6 @@ namespace AddressApi.Controllers
 
             Metrics metrics = _context.Metrics.Find(1);
 
-
-
             if (metrics != null)
             {
 
@@ -111,11 +113,7 @@ namespace AddressApi.Controllers
             long timeTaken = stopwatch.ElapsedMilliseconds;
 
 
-
-            // increment the "corrected addresses" metric
-
-
-            return await Task.FromResult(correctedAddress);
+            return await Task.FromResult(correctedAddress ?? new InputAddress());
         }
 
         public async Task<InputAddress> BatchCorrectAddressesAsync(Address inputAddress, List<Address> addresses)
