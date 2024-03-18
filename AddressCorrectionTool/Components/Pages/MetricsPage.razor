@@ -13,6 +13,7 @@
 
 @page "/metrics/"
 
+@inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
@@ -129,11 +130,9 @@
 
         if (response.IsSuccessStatusCode)
         {
-            Console.WriteLine("Metrics reset successfully");
-            metricsArray[0] = 0;
-            metricsArray[1] = 0;
-            metricsArray[2] = 0;
-            await CreateMetricsChart();
+            // refresh the page
+
+            NavigationManager.NavigateTo("/metrics", true);
         }
         else
         {

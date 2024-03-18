@@ -56,9 +56,7 @@ using (var serviceScope = app.Services.CreateScope())
     {
        AddressCorrectionService addressCorrectionService = new(context);
        addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
-        
-        Debug.WriteLine("Number of addresses: " + addresses.Count);
-
+      
     }
     else
         addresses = GetAddresses(context);
@@ -66,8 +64,6 @@ using (var serviceScope = app.Services.CreateScope())
 
 static List<Address> GetAddresses(AddressContext context)
 {
-
-    Debug.WriteLine("Getting Addresses");
     // set timeout to 5 minutes
     context.Database.SetCommandTimeout(300);
     return context.Addresses.ToList();
@@ -88,6 +84,29 @@ app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
     }
 })
     .WithName("CreateMetrics")
+    .WithOpenApi();
+
+//mapPut - update metrics
+app.MapPut("/Metrics", (Metrics metrics, AddressContext context) =>
+{
+    // set all metrics to 0
+    metrics = new Metrics();
+    metrics = context.Metrics.Find(1);
+
+    if(metrics == null)
+    {
+        return Results.NotFound();
+    }
+    metrics.CorrectedAddresses = 0;
+    metrics.FailedAddresses = 0;
+    metrics.MiscorrectedAddresses = 0;
+    metrics.TotalAddresses = 0;
+
+    context.SaveChanges();
+    return Results.Ok();
+    
+})
+    .WithName("UpdateMetrics")
     .WithOpenApi();
 
 app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext context) =>
@@ -149,7 +168,6 @@ app.MapDelete("/InputAddresses", (AddressContext context) =>
 app.MapGet("/Metrics", (AddressContext context) =>
 {
     Metrics metrics = context.Metrics.Find(1);
-    //print to debug
 
     if (metrics != null)
     {
