@@ -1,8 +1,11 @@
 var metricsChart;
 
+Chart.register(ChartDataLabels);
+
 async function createMetricsChart(data) {
 
-    Chart.register(ChartDataLabels);
+    //register labels
+    // Chart.register(ChartDataLabels);
 
     if (metricsChart) {
         metricsChart.destroy();
@@ -115,6 +118,11 @@ function createTimeSeriesChart(timeSeriesData) {
             scales: {
                 x: {
                     type: 'time',
+                    title: {
+                        display: true,
+                        text: 'Time',
+                        color: 'white'
+                    },
                     time: {
                         unit: 'minute'
                     },
@@ -124,6 +132,11 @@ function createTimeSeriesChart(timeSeriesData) {
                 },
                 y: {
                     beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Milliseconds',
+                        color: 'white'
+                    },
                     ticks: {
                         color: 'white' // change this to any valid CSS color
                     }

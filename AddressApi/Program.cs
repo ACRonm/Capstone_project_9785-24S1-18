@@ -18,10 +18,16 @@ builder.Services.AddSwaggerGen();
 
 
 var connectionString = string.Empty;
-var config = builder.Configuration;
 
- //get environment variable
-connectionString = "Server=tcp:address-correction-server.database.windows.net,1433;Initial Catalog=address-correction-db;Persist Security Info=False;User ID=CloudSA622bf291;Password=datS47fDvK#PZw@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+// get Connectionstring from user secrets
+if (builder.Environment.IsDevelopment())
+{
+    var config = builder.Configuration;
+    connectionString = config["ConnectionString"];
+    Console.WriteLine($"Connection String: {connectionString}");
+}
+else
+    connectionString = builder.Configuration.GetConnectionString("ConnectionString");
 
 builder.Services.AddDbContext<AddressContext>(options =>
     options.UseSqlServer(connectionString));
@@ -45,9 +51,10 @@ using (var serviceScope = app.Services.CreateScope())
 
     if (app.Environment.IsDevelopment())
     {
+        Console.WriteLine("Seeding database");
         AddressCorrectionService addressCorrectionService = new(context);
         addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
-
+        Console.WriteLine("Number of addresses: " + addresses.Count);
     }
     else
         addresses = GetAddresses(context);
@@ -59,6 +66,26 @@ static List<Address> GetAddresses(AddressContext context)
     context.Database.SetCommandTimeout(300);
     return context.Addresses.ToList();
 }
+
+// mapget - get all addresses from InputAddresses table
+app.MapGet("InputAddresses/CorrectedAddresses", (AddressContext context) =>
+{
+    // get list of input addresses
+    List<InputAddress> correctedAddresses = context.InputAddresses.ToList();
+
+    if (correctedAddresses != null)
+    {
+        return Results.Ok(correctedAddresses);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+
+})
+    .WithName("CorrectedAddresses")
+    .WithOpenApi();
+
 
 // post metrics
 app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
@@ -81,6 +108,7 @@ app.MapPost("/Metrics", (Metrics metrics, AddressContext context) =>
 app.MapPut("/Metrics", (Metrics metrics, AddressContext context) =>
 {
     // set all metrics to 0
+
     metrics = new Metrics();
     metrics = context.Metrics.Find(1);
 
@@ -95,6 +123,9 @@ app.MapPut("/Metrics", (Metrics metrics, AddressContext context) =>
     metrics.FailedAddresses = 0;
     metrics.MiscorrectedAddresses = 0;
     metrics.TotalAddresses = 0;
+
+    //delete the input addresses
+    context.InputAddresses.RemoveRange(context.InputAddresses);
 
     context.SaveChanges();
     return Results.Ok();

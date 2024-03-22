@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OYLFRPSTjxN7beHZ5rUxQq/mP8E2cjICW3A6L6lAdsQ=",
+  "Hash": "TnLVP9xe5bCwMh6FBCgZZopV6bI8BYw+furQjLLHvjc=",
   "Source": "AddressCorrectionTool",
   "BasePath": "_content/AddressCorrectionTool",
   "Mode": "Default",
@@ -207,25 +207,6 @@
       "OriginalItemSpec": "wwwroot\\css\\general.css"
     },
     {
-      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.ico",
-      "SourceId": "AddressCorrectionTool",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
-      "BasePath": "_content/AddressCorrectionTool",
-      "RelativePath": "favicon.ico",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\favicon.ico"
-    },
-    {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
       "SourceId": "AddressCorrectionTool",
       "SourceType": "Discovered",
@@ -264,12 +245,12 @@
       "OriginalItemSpec": "wwwroot\\favicon-32x32.png"
     },
     {
-      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.ico",
       "SourceId": "AddressCorrectionTool",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
       "BasePath": "_content/AddressCorrectionTool",
-      "RelativePath": "images/UC_Logo.png",
+      "RelativePath": "favicon.ico",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -280,7 +261,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\UC_Logo.png"
+      "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo_sm.png",
@@ -300,6 +281,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\UC_Logo_sm.png"
+    },
+    {
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
+      "SourceId": "AddressCorrectionTool",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
+      "BasePath": "_content/AddressCorrectionTool",
+      "RelativePath": "images/UC_Logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\UC_Logo.png"
     },
     {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",

@@ -60,7 +60,7 @@
         <div class="col-lg-6">
             <div class="card h-100 mt-3 mt-lg-0">
                 <div class="card-body bg-body-tertiary">
-                    <h5 class="card-title text-center">Processing Time (Miliseconds)</h5>
+                    <h5 class="card-title text-center">Processing Time</h5>
 
                     <h5 class="card-title text-center"></h5>
                     <canvas id="timeseriesMetricsChart"></canvas>
@@ -69,21 +69,117 @@
                         <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Average Processing Time</h5>
-                                    <p class="card-text">@meanProcessingTime Miliseconds</p>
+                                    <h5 class="card-title">Processing Time</h5>
+                                    <p class="card-text">@if (meanProcessingTime > 0)
+                                        {
+                                        <p>
+                                            Mean: @meanProcessingTime milliseconds
+                                        </p>
+                                        <p>
+                                            Maximum: @timeSeriesList.Max(x => x.ProcessingTime) milliseconds
+                                        </p>
+                                        <p>
+                                            Minimum: @timeSeriesList.Min(x => x.ProcessingTime) milliseconds
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p>
+                                            No data available
+                                        </p>
+                                        }
+
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Statistic 3</h5>
+                                    <h5 class="card-title"></h5>
                                     <p class="card-text">
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body bg-body-tertiary">
+                    <h5 class="card-title
+                        text-center">Address Correction Metrics</h5>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Total Addresses</th>
+                                <th scope="col">Corrected Addresses</th>
+                                <th scope="col">Failed Addresses</th>
+                                <th scope="col">Miscorrected Addresses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@metricsArray[0]</td>
+                                <td>@metricsArray[1]</td>
+                                <td>@metricsArray[2]</td>
+                                <td>@metricsArray[3]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 mb-5">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body bg-body-tertiary">
+                    <h5 class="card-title
+                        text-center">Miscorrected Addresses</h5>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Original Address</th>
+                                <th scope="col">Original Suburb</th>
+                                <th scope="col">Miscorrected Address</th>
+                                <th scope="col">Miscorrected Suburb</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @if (correctedAddressList != null)
+                            {
+                                @foreach (var address in correctedAddressList)
+                                {
+                                    if (address.Result != 1)
+                                    {
+                                        <tr>
+
+                                            <td>PEER STREET</td>
+                                            <td>WEST BATHUSRT
+                                                @address.Postcode</td>
+                                            <td>@address.Street</td>
+                                            <td>@address.City
+                                                @address.Postcode
+                                            </td>
+
+                                        </tr>
+
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -106,6 +202,7 @@
     private int[] metricsArray = new int[4];
     List<TimeSeries>? timeSeriesList;
     private double meanProcessingTime;
+    List<InputAddress>? correctedAddressList = new List<InputAddress>();
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -120,17 +217,22 @@
 
 
             Metrics metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics") ?? new Metrics();
-
+            Console.WriteLine(metrics.TotalAddresses);
             timeSeriesList = await Http.GetFromJsonAsync<List<TimeSeries>>(baseUrl + "/InputAddresses");
-            meanProcessingTime = timeSeriesList?.Average(x => x.ProcessingTime ?? 0) ?? 0;
+            if (timeSeriesList != null && timeSeriesList.Any())
+            {
+                meanProcessingTime = timeSeriesList?.Average(x => x.ProcessingTime ?? 0) ?? 0;
 
-            meanProcessingTime = Math.Round(meanProcessingTime);
-
+                meanProcessingTime = Math.Round(meanProcessingTime);
+            }
             if (metrics != null)
             {
                 Array.Copy(new[] { metrics.TotalAddresses, metrics.CorrectedAddresses, metrics.FailedAddresses,
 metrics.MiscorrectedAddresses }, metricsArray, 4);
             }
+
+            correctedAddressList = await Http.GetFromJsonAsync<List<InputAddress>>(baseUrl + "/InputAddresses/CorrectedAddresses");
+
 
             isLoaded = true;
             StateHasChanged();
@@ -138,19 +240,11 @@ metrics.MiscorrectedAddresses }, metricsArray, 4);
         else if (metricsArray != null)
         {
             await CreateMetricsChart();
-
-            if (timeSeriesList != null)
-            {
-                await CreateTimeSeriesChart(timeSeriesList);
-            }
-            else
-            {
-                Console.WriteLine("No time series data");
-            }
-
         }
-
-
+        if (timeSeriesList != null && timeSeriesList.Any())
+        {
+            await CreateTimeSeriesChart(timeSeriesList);
+        }
     }
 
     async Task CreateMetricsChart()
@@ -173,6 +267,8 @@ metrics.MiscorrectedAddresses }, metricsArray, 4);
                 FailedAddresses = 0,
                 MiscorrectedAddresses = 0
             };
+
+        meanProcessingTime = 0;
 
         var content = new StringContent(JsonSerializer.Serialize(metrics), Encoding.UTF8, "application/json");
 

@@ -42,7 +42,10 @@ namespace AddressApi.Controllers
 
             List<Address> filteredAddresses;
 
-            filteredAddresses = addresses.Where(a => Math.Abs(a.Postcode - inputAddress.Postcode) <= 10).ToList();
+            filteredAddresses = addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
+
+            // filteredAddresses = addresses.Where(a => Math.Abs(a.Postcode - inputAddress.Postcode) <= 10).ToList();
+
 
             HashSet<string> knownStreetNames = new HashSet<string>();
             HashSet<string> knownCityNames = new HashSet<string>();
@@ -116,8 +119,6 @@ namespace AddressApi.Controllers
 
         public async Task<InputAddress> BatchCorrectAddressesAsync(Address inputAddress, List<Address> addresses)
         {
-            Console.WriteLine("Correcting addresses...");
-
             // convert to input address
             InputAddress input = new InputAddress
             {

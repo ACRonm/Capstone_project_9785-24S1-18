@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace AddressApi.Migrations
+namespace AddressCorrectionTool.Migrations
 {
     /// <inheritdoc />
-    public partial class RestoreDeletedDb : Migration
+    public partial class LocalServerInitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

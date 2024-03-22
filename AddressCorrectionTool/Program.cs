@@ -36,6 +36,7 @@ if (builder.Environment.IsDevelopment())
 {
     var config = builder.Configuration;
     connectionString = config["ConnectionString"];
+    Console.WriteLine($"Connection String: {connectionString}");
 }
 else
     connectionString = builder.Configuration.GetConnectionString("ConnectionString");
