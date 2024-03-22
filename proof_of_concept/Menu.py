@@ -140,7 +140,7 @@ def download_file(url, filename):
     return downloaded_filename
 
 
-def load_into_memory(filename, read_all=True):
+def load_into_memory(filename, read_all=False):
 
     print(f"Loading {filename} into memory...")
     addresses = []
@@ -159,7 +159,7 @@ def load_into_memory(filename, read_all=True):
                 # load all addresses
                 continue
             else:
-                if len(addresses) > 50:
+                if len(addresses) > 300:
                     break
     return addresses
 

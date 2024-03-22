@@ -71,7 +71,7 @@ def simulate_errors(address_string):
 
     # Choose a random operation to apply
     operations = [random_insertion, random_deletion,
-                  random_substitution, random_transposition, random_transposition, ocr_error, ocr_error, ocr_error]
+                  random_substitution, random_transposition, random_transposition, ocr_error]
 
     rand_operation = random.choice(operations)
 
