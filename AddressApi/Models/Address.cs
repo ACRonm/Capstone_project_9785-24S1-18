@@ -22,7 +22,7 @@ namespace AddressApi.Models
     }
 
     [Index(nameof(Street), nameof(City), nameof(Postcode), nameof(Region), nameof(Result))]
-    public class  InputAddress
+    public class InputAddress
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -37,7 +37,7 @@ namespace AddressApi.Models
         public float? Score { get; set; }
         public long? ProcessingTime { get; set; }
         public DateTime TimeStamp { get; set; }
-        
+
     }
 
     public class Metrics
@@ -48,6 +48,14 @@ namespace AddressApi.Models
         public int CorrectedAddresses { get; set; }
         public int FailedAddresses { get; set; }
         public int MiscorrectedAddresses { get; set; }
+    }
+
+    public class TimeSeries
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public long? ProcessingTime { get; set; }
     }
 
 }

@@ -27,10 +27,9 @@ namespace AddressApi.Controllers
         public async Task<InputAddress?> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
             Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            stopwatch.Restart();
 
             AddressCorrectionService addressCorrectionService = new AddressCorrectionService(_context);
-            Console.WriteLine("Correcting address...", inputAddress.Street);
 
             if (inputAddress.Street == null || inputAddress.City == null)
             {
@@ -45,8 +44,8 @@ namespace AddressApi.Controllers
 
             filteredAddresses = addresses.Where(a => Math.Abs(a.Postcode - inputAddress.Postcode) <= 10).ToList();
 
-            List<string> knownStreetNames = new List<string>();
-            List<string> knownCityNames = new List<string>();
+            HashSet<string> knownStreetNames = new HashSet<string>();
+            HashSet<string> knownCityNames = new HashSet<string>();
 
             foreach (Address address in filteredAddresses)
             {
@@ -63,13 +62,8 @@ namespace AddressApi.Controllers
             // Get the results
             var closestStreetMatchResult = closestStreetMatchTask.Result;
             var closestCityMatchResult = closestCityMatchTask.Result;
-            InputAddress correctedAddress;
 
-            if (closestStreetMatchResult == null)
-            {
-                inputAddress.Result = 0;
-                return inputAddress;
-            }
+            InputAddress correctedAddress;
 
             if (closestStreetMatchResult?.Score > 66 && closestCityMatchResult?.Score > 66)
             {
@@ -91,11 +85,14 @@ namespace AddressApi.Controllers
                 correctedAddress.Result = 0;
             }
 
-            Metrics metrics = _context.Metrics.Find(1);
+            Metrics? metrics = _context.Metrics.Find(1);
 
-            if (metrics != null)
+            if (metrics == null)
             {
-
+                _context.Metrics.Add(new Metrics { TotalAddresses = 1, CorrectedAddresses = 0, FailedAddresses = 0 });
+            }
+            else
+            {
                 metrics.TotalAddresses++;
 
                 if (correctedAddress != null && correctedAddress.Result == 0)
@@ -112,6 +109,7 @@ namespace AddressApi.Controllers
             stopwatch.Stop();
             long timeTaken = stopwatch.ElapsedMilliseconds;
 
+            correctedAddress.ProcessingTime = timeTaken;
 
             return await Task.FromResult(correctedAddress ?? new InputAddress());
         }
@@ -131,26 +129,28 @@ namespace AddressApi.Controllers
                 Region = inputAddress.Region
             };
 
-            InputAddress correctedAddress = await CorrectAddressAsync(input, addresses);
-
-            Debug.WriteLine("Address id: " + inputAddress.Id);
+            InputAddress? correctedAddress = await CorrectAddressAsync(input, addresses);
 
             // find the address in addresses with the same id
             Address originalAddress = addresses.Find(a => a.Id == inputAddress.Id);
 
+            Metrics? metrics = _context.Metrics.Find(1);
 
             if (originalAddress.City == correctedAddress.City && originalAddress.Street == correctedAddress.Street)
             {
                 return correctedAddress;
             }
-            else // if the corrected address is different from the original address but it was still corrected, then the correction was incorrect. We need to track this, so we increment the miscalculated addresses metric and decrement the corrected addresses metric
+            else if (metrics != null) // if the corrected address is different from the original address but it was still corrected, then the correction was incorrect. We need to track this, so we increment the miscalculated addresses metric and decrement the corrected addresses metric
             {
+
                 correctedAddress.Result = 0;
                 // increment the miscalcalculated addresses metric
-                _context.Metrics.Find(1).MiscorrectedAddresses++;
+                metrics.MiscorrectedAddresses++;
                 // decrement the corrected addresses metric
-                _context.Metrics.Find(1).CorrectedAddresses--;
+                metrics.CorrectedAddresses--;
             }
+
+            correctedAddress.TimeStamp = DateTime.Now;
 
             return correctedAddress;
         }

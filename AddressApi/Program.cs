@@ -17,20 +17,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-string connectionString = String.Empty;
+var connectionString = string.Empty;
+var config = builder.Configuration;
 
-//if (builder.Environment.IsDevelopment())
-//{
-//    builder.Services.AddSingleton<SecretsService>();
-
-//    SecretsService secretsService = new(builder.Configuration);
-
-//    connectionString = secretsService.GetSecret("ConnectionString");
-//}
-//else
-//{
+ //get environment variable
 connectionString = "Server=tcp:address-correction-server.database.windows.net,1433;Initial Catalog=address-correction-db;Persist Security Info=False;User ID=CloudSA622bf291;Password=datS47fDvK#PZw@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-//}
 
 builder.Services.AddDbContext<AddressContext>(options =>
     options.UseSqlServer(connectionString));
@@ -54,9 +45,9 @@ using (var serviceScope = app.Services.CreateScope())
 
     if (app.Environment.IsDevelopment())
     {
-       AddressCorrectionService addressCorrectionService = new(context);
-       addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
-      
+        AddressCorrectionService addressCorrectionService = new(context);
+        addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
+
     }
     else
         addresses = GetAddresses(context);
@@ -93,7 +84,10 @@ app.MapPut("/Metrics", (Metrics metrics, AddressContext context) =>
     metrics = new Metrics();
     metrics = context.Metrics.Find(1);
 
-    if(metrics == null)
+    context.InputAddresses.RemoveRange(context.InputAddresses);
+    context.SaveChanges();
+
+    if (metrics == null)
     {
         return Results.NotFound();
     }
@@ -104,7 +98,7 @@ app.MapPut("/Metrics", (Metrics metrics, AddressContext context) =>
 
     context.SaveChanges();
     return Results.Ok();
-    
+
 })
     .WithName("UpdateMetrics")
     .WithOpenApi();
@@ -119,6 +113,7 @@ app.MapPost("/InputAddresses", (InputAddress inputAddress, AddressContext contex
 
     InputAddress correctedAddress = addressCorrectionService.CorrectAddressAsync(inputAddress, addresses).Result;
 
+    correctedAddress.TimeStamp = DateTime.Now;
     context.Add(correctedAddress);
     context.SaveChanges();
     if (correctedAddress != null)
@@ -139,13 +134,15 @@ app.MapPost("/BatchInputAddresses", async (Address inputAddress, AddressContext 
 
     var addressCorrectionService = new AddressCorrectionService(context);
 
-    InputAddress correctedAddresses = await addressCorrectionService.BatchCorrectAddressesAsync(inputAddress, addresses);
+    InputAddress correctedAddress = await addressCorrectionService.BatchCorrectAddressesAsync(inputAddress, addresses);
 
-    context.AddRange(correctedAddresses);
+    correctedAddress.TimeStamp = DateTime.Now;
+
+    context.Add(correctedAddress);
     context.SaveChanges();
-    if (correctedAddresses != null)
+    if (correctedAddress != null)
     {
-        return Results.Ok(correctedAddresses);
+        return Results.Ok(correctedAddress);
     }
     else
     {
@@ -196,6 +193,34 @@ app.MapGet("/SampleAddresses", (AddressContext context) =>
     }
 })
     .WithName("Addresses")
+    .WithOpenApi();
+
+// mapget inputaddresses
+app.MapGet("/InputAddresses", (AddressContext context) =>
+{
+    List<TimeSeries> timeSeriesList = new List<TimeSeries>();
+
+    List<InputAddress> InputAddresses = context.InputAddresses.ToList();
+
+    foreach (var inputAddress in InputAddresses)
+    {
+        TimeSeries timeSeries = new TimeSeries();
+        timeSeries.TimeStamp = inputAddress.TimeStamp;
+        timeSeries.ProcessingTime = inputAddress.ProcessingTime;
+        timeSeries.Id = inputAddress.Id;
+        timeSeriesList.Add(timeSeries);
+    }
+
+    if (timeSeriesList != null)
+    {
+        return Results.Ok(timeSeriesList);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
+})
+    .WithName("InputAddresses")
     .WithOpenApi();
 
 app.UseHttpsRedirection();

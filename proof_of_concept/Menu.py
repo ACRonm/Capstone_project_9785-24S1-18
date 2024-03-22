@@ -140,8 +140,9 @@ def download_file(url, filename):
     return downloaded_filename
 
 
-def load_into_memory(filename, read_all=False):
+def load_into_memory(filename, read_all=True):
 
+    print(f"Loading {filename} into memory...")
     addresses = []
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter=',')

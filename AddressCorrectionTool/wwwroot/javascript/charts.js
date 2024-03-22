@@ -2,9 +2,6 @@ var metricsChart;
 
 async function createMetricsChart(data) {
 
-    // convert data array to object
-    console.log(data[0]);
-
     Chart.register(ChartDataLabels);
 
     if (metricsChart) {
@@ -22,7 +19,8 @@ async function createMetricsChart(data) {
                     {
                         data: [
                             data[1],
-                            data[2]
+                            data[2],
+                            data[3]
                         ],
                         backgroundColor: [
                             // blue colour palette
@@ -36,13 +34,16 @@ async function createMetricsChart(data) {
                             font: {
                                 size: '20',
                                 weight: 'bold'
+                            },
+                            formatter: function (value, context) {
+                                return value === 0 ? null : value;
                             }
 
                         },
                         borderWidth: 1
                     }
                 ],
-                labels: ['Corrected Addresses', 'Failed Addresses']
+                labels: ['Corrected Addresses', 'Failed Addresses', 'Miscorrected Addresses']
             },
             options: {
                 responsive: true,
@@ -50,8 +51,84 @@ async function createMetricsChart(data) {
                     display: true,
                     text: 'Metrics'
                 },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
             }
         }
     );
 }
 
+var timeSeriesChart;
+
+function createTimeSeriesChart(timeSeriesData) {
+
+    const ctx = document.getElementById('timeseriesMetricsChart').getContext('2d');
+    if (timeSeriesChart) {
+        timeSeriesChart.destroy();
+    }
+
+
+    timeSeriesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timeSeriesData.map(item => new Date(item.timeStamp)),
+            datasets: [{
+                label: 'Processing Time',
+                data: timeSeriesData.map(item => item.processingTime),
+                borderColor: 'rgb(75, 192, 192)',
+                borderCapStyle: 'round',
+                tension: 0.3,
+                datalabels: {
+                    display: false
+                }
+            }]
+        },
+        options: {
+            plugins: {
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'x'
+                    },
+                    zoom: {
+                        wheel: {
+                            enabled: true
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'x'
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute'
+                    },
+                    ticks: {
+                        color: 'white' // change this to any valid CSS color
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white' // change this to any valid CSS color
+                    }
+                }
+            }
+        }
+    });
+}

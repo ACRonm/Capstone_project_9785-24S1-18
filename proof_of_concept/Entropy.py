@@ -5,6 +5,8 @@ from tqdm import tqdm
 
 def simulate_errors(address_string):
 
+    address_string = simulate_street_type_abbreviation(address_string)
+
     # Define operation functions
     def random_insertion(address_string):
         rand_index = random.randint(0, len(address_string))
@@ -74,3 +76,75 @@ def simulate_errors(address_string):
     rand_operation = random.choice(operations)
 
     return rand_operation(address_string)
+
+
+def simulate_street_type_abbreviation(address_string):
+
+    # Define a dictionary of common street type abbreviations
+    street_type_abbreviations = {
+        "Avenue": {"Ave", "Ave.", "Av"},
+        "Boulevard": ["Blvd", "Blvd.", "Bv"],
+        "Promenade": ["Prom", "Prom."],
+        "Drive": {"Dr", "Dr.", "Drv"},
+        "Street": {"St", "St.", "Str"},
+        "Road": {"Rd", "Rd.", "R"},
+        "Lane": {"Ln", "Ln.", "La"},
+        "Parkway": {"Pkwy", "Pkwy.", "Pky"},
+        "Circle": {"Cir", "Cir.", "C"},
+        "Court": {"Ct", "Ct."},
+        "Square": {"Sq", "Sq."},
+        "Highway": {"Hwy", "Hwy."},
+        "Plaza": {"Plz", "Plz."},
+        "Terrace": {"Ter", "Ter."},
+        "Ridge": {"Rdg", "Rdg."},
+        "Crossing": "Xing",
+        "Grove": {"Grv", "Grv.", "Gr"},
+        "Point": {"Pt", "Pt."},
+        "Creek": {"Crk", "Crk."},
+        "Ridge": {"Rdg", "Rdg."},
+        "View": {"Vw", "Vw."},
+        "Crescent": {"Cres", "Cres.", "Cr.", "Cr"},
+        "Cove": {"Cv", "Cv."},
+        "Gardens": {"Gdns", "Gdns."},
+        "Green": {"Grn", "Grn."},
+        "North": {"N", "N."},
+        "South": {"S", "S."},
+        "Terrace": {"Ter", "Ter."},
+        "West": {"W", "W."},
+        "East": {"E", "E."},
+        "Place": {"Pl", "Pl."},
+        "Circuit": {"Cct", "Cct."},
+        "Parade": {"Pde", "Pde."},
+        "Esplanade": {"Esp", "Esp."},
+        "Mews": {"Mws", "Mws."},
+        "Quay": {"Qy", "Qy."},
+        "Walk": {"Wlk", "Wlk."},
+        "Way": {"Wy", "Wy."},
+        "Loop": {"Lp", "Lp."},
+        "Track": {"Trk", "Trk."},
+        "Link": {"Lnk", "Lnk."},
+        "Vista": {"Vis", "Vis."},
+        "Glade": {"Gld", "Gld."}
+    }
+
+    street_type_abbreviations = {
+        k.upper(): [v.upper() for v in vs] for k, vs in street_type_abbreviations.items()}
+
+    # separate the street type from the rest of the address
+    address_parts = address_string.split(" ")
+    street_type = address_parts[-1].strip()
+    street_name = " ".join(address_parts[:-1])
+
+    # if the street type is in the dictionary, replace it with a random abbreviation, with a 60% chance
+    random_rate = 0.6
+
+    if street_type in street_type_abbreviations:
+        abbreviations = street_type_abbreviations[street_type]
+        if random.random() < random_rate:
+            street_type = random.choice(list(abbreviations))
+
+            # print the list of street type abbreviations
+
+            address_string = street_name + " " + street_type
+
+    return address_string

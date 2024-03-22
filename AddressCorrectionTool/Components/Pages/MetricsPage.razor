@@ -60,8 +60,30 @@
         <div class="col-lg-6">
             <div class="card h-100 mt-3 mt-lg-0">
                 <div class="card-body bg-body-tertiary">
+                    <h5 class="card-title text-center">Processing Time (Miliseconds)</h5>
+
                     <h5 class="card-title text-center"></h5>
-                    <canvas id=""></canvas>
+                    <canvas id="timeseriesMetricsChart"></canvas>
+
+                    <div class="row mt-5">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Average Processing Time</h5>
+                                    <p class="card-text">@meanProcessingTime Miliseconds</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Statistic 3</h5>
+                                    <p class="card-text">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,13 +98,19 @@
 
 @code
 {
+    private DateTime startDate;
+    private DateTime endDate;
     private bool isLoaded;
     private string? baseUrl;
     private string? apiKey;
-    private int[] metricsArray = new int[3];
+    private int[] metricsArray = new int[4];
+    List<TimeSeries>? timeSeriesList;
+    private double meanProcessingTime;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
         if (firstRender)
         {
             baseUrl = Configuration["ApiUrl"];
@@ -90,28 +118,49 @@
 
             Http.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
 
+
             Metrics metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics") ?? new Metrics();
 
+            timeSeriesList = await Http.GetFromJsonAsync<List<TimeSeries>>(baseUrl + "/InputAddresses");
+            meanProcessingTime = timeSeriesList?.Average(x => x.ProcessingTime ?? 0) ?? 0;
+
+            meanProcessingTime = Math.Round(meanProcessingTime);
 
             if (metrics != null)
             {
-                // add the values to the array
-                metricsArray[0] = metrics.TotalAddresses;
-                metricsArray[1] = metrics.CorrectedAddresses;
-                metricsArray[2] = metrics.FailedAddresses;
+                Array.Copy(new[] { metrics.TotalAddresses, metrics.CorrectedAddresses, metrics.FailedAddresses,
+metrics.MiscorrectedAddresses }, metricsArray, 4);
             }
+
             isLoaded = true;
             StateHasChanged();
         }
         else if (metricsArray != null)
         {
             await CreateMetricsChart();
+
+            if (timeSeriesList != null)
+            {
+                await CreateTimeSeriesChart(timeSeriesList);
+            }
+            else
+            {
+                Console.WriteLine("No time series data");
+            }
+
         }
+
+
     }
 
     async Task CreateMetricsChart()
     {
         await JSRuntime.InvokeVoidAsync("createMetricsChart", metricsArray);
+    }
+
+    async Task CreateTimeSeriesChart(List<TimeSeries> timeSeriesList)
+    {
+        await JSRuntime.InvokeVoidAsync("createTimeSeriesChart", timeSeriesList);
     }
 
     async Task ResetMetrics()
@@ -121,7 +170,8 @@
             {
                 TotalAddresses = 0,
                 CorrectedAddresses = 0,
-                FailedAddresses = 0
+                FailedAddresses = 0,
+                MiscorrectedAddresses = 0
             };
 
         var content = new StringContent(JsonSerializer.Serialize(metrics), Encoding.UTF8, "application/json");
@@ -130,14 +180,28 @@
 
         if (response.IsSuccessStatusCode)
         {
-            // refresh the page
+            metricsArray[0] = 0;
+            metricsArray[1] = 0;
+            metricsArray[2] = 0;
+            metricsArray[3] = 0;
 
-            NavigationManager.NavigateTo("/metrics", true);
+            // update the time series chart
+            timeSeriesList = await Http.GetFromJsonAsync<List<TimeSeries>>(baseUrl + "/InputAddresses");
+
+            await CreateMetricsChart();
+            await CreateTimeSeriesChart(timeSeriesList);
+
         }
         else
         {
             Console.WriteLine("Failed to reset metrics");
         }
     }
-
+    public class TimeSeries
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public long? ProcessingTime { get; set; }
+    }
 }
