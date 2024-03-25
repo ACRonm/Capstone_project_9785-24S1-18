@@ -81,6 +81,10 @@
       "PackagePath": "staticwebassets\\javascript\\json.min.js"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\python.js",
+      "PackagePath": "staticwebassets\\javascript\\python.js"
+    },
+    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",
       "PackagePath": "staticwebassets\\sample.csv"
     },

@@ -159,7 +159,7 @@ def load_into_memory(filename, read_all=False):
                 # load all addresses
                 continue
             else:
-                if len(addresses) > 300:
+                if len(addresses) > 3000:
                     break
     return addresses
 

@@ -27,10 +27,17 @@
             reliable and extensive dataset ensures the robustness and reliability of our tool.
         </p>
 
-        <h2 id="address-corruption">Address Corruption</h2>
+        <p>OpenAddresses' Australian Countrywide dataset consisted of, at the time of making this application, over
+            15,000,000 addresses. To increase performance, this was deduplicated,
+            resulting in 518,181 unique addresses.
+        </p>
+
+        <h2 id="address-corruption">Address String Corruption</h2>
 
         <p>
-            The address corruption is simulated using a Python script. The script introduces errors into the address
+            The address corruption is simulated using a Python script. Each part of the whole address string is
+            independently corrupted, including the Street Name, Suburb Name and Postcode. The script introduces errors
+            into the address
             data to simulate real-world inaccuracies that can occur due to various reasons such as typos, abbreviations,
             and OCR errors. The script performs the following operations:
         </p>
@@ -89,9 +96,9 @@ def random_transposition(address_string):
             addresses for testing the robustness of our address correction tool.
         </p>
 
-
-
+        <h2 id="address-correction"></h2>
     </div>
+
     <div class="col mx-3">
         <h2>Headings on this page</h2>
         <ul>

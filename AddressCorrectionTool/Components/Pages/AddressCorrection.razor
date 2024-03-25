@@ -226,6 +226,13 @@
         var fileInfo = new System.IO.FileInfo(e.File.Name);
         var fileExtension = fileInfo.Extension;
 
+        if (e.File.Size > 512000)
+        {
+            ErrorMessage = "File size too large";
+            placeHolder = "Choose file";
+            return;
+        }
+
         if (fileExtension != ".csv")
         {
             ErrorMessage = "Invalid file type. Please upload a CSV file.";
@@ -262,15 +269,24 @@
 
         var memoryStream = new MemoryStream();
 
-        await selectedFile.OpenReadStream().CopyToAsync(memoryStream);
-        memoryStream.Position = 0;
+        try
+        {
+            await selectedFile.OpenReadStream().CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
 
-        using var reader = new StreamReader(memoryStream);
-        var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+            using var reader = new StreamReader(memoryStream);
+            var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
 
-        List<Address> addressList = csv.GetRecords<Address>().ToList();
+            List<Address> addressList = csv.GetRecords<Address>().ToList();
 
-        await BatchCorrectionService.ProcessAddressesAsync(addressList, UpdateProgressBar);
+            await BatchCorrectionService.ProcessAddressesAsync(addressList, UpdateProgressBar);
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = "File size too large";
+            Console.WriteLine(e.Message);
+        }
+
 
         isLoading = false;
     }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iX5cicKKdpzxnWbSgjsr4qhJ/p1EAUgO/XBUZBd1V+o=",
+  "Hash": "cOGAIb8Jbf0z2grm8qoyrretKBo2uunQJ1VdgjNCbtw=",
   "Source": "AddressCorrectionTool",
   "BasePath": "_content/AddressCorrectionTool",
   "Mode": "Default",
@@ -414,6 +414,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\javascript\\json.min.js"
+    },
+    {
+      "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\python.js",
+      "SourceId": "AddressCorrectionTool",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\",
+      "BasePath": "_content/AddressCorrectionTool",
+      "RelativePath": "javascript/python.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\javascript\\python.js"
     },
     {
       "Identity": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",

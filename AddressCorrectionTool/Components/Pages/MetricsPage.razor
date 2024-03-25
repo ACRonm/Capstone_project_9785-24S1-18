@@ -151,8 +151,10 @@
                             <tr>
                                 <th scope="col">Original Address</th>
                                 <th scope="col">Original Suburb</th>
+                                <th scope="col">Original Postcode</th>
                                 <th scope="col">Miscorrected Address</th>
                                 <th scope="col">Miscorrected Suburb</th>
+                                <th scope="col">Miscorrected Postcode</th>
                                 <th scope="col">Result</th>
 
                             </tr>
@@ -169,15 +171,14 @@
                                         <tr>
 
                                             <td>@address.Street</td>
-                                            <td>@address.City
-                                                @address.Postcode</td>
+                                            <td>@address.City </td>
+                                            <td>@address.Postcode</td>
                                             <td>@address.CorrectedStreet</td>
-                                            <td>@address.CorrectedCity
-                                                @address.Postcode
-                                            </td>
+                                            <td>@address.CorrectedCity</td>
+                                            <td>@address.Postcode</td>
                                             <td>@address.Result</td>
-
                                         </tr>
+
 
                                     }
                                 }
