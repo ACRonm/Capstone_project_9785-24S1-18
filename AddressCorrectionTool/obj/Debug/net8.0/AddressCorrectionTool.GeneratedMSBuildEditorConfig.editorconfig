@@ -174,8 +174,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Layout/DocsLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcRG9jc0xheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/AddressCorrection.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZGRyZXNzQ29ycmVjdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Docs/Api.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2NzXEFwaS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Docs/Data.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2NzXERhdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Docs/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2NzXEhvbWUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/University/Capstone/Capstone_project_9785-24S1-18/AddressCorrectionTool/Components/Pages/Error.razor]

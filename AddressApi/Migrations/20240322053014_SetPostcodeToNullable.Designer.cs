@@ -4,6 +4,7 @@ using AddressApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AddressApi.Migrations
 {
     [DbContext(typeof(AddressContext))]
-    partial class AddressContextModelSnapshot : ModelSnapshot
+    [Migration("20240322053014_SetPostcodeToNullable")]
+    partial class SetPostcodeToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,12 +74,6 @@ namespace AddressApi.Migrations
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CorrectedCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CorrectedStreet")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");

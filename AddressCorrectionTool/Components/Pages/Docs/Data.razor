@@ -1,0 +1,123 @@
+@using Microsoft.JSInterop
+
+@page "/docs/data"
+@layout AddressCorrectionTool.Components.Layout.DocsLayout
+
+@inject IJSRuntime JSRuntime
+
+@rendermode InteractiveServer
+
+
+
+<div class="row">
+    <div class="col-8">
+        <h1>Data</h1>
+
+        <p>
+            This page provides information about our data sources and how we engineer and generate our data using Python
+            scripts.
+        </p>
+
+        <h2 id="data-sources">Data Sources</h2>
+
+        <p>
+            Our primary data source is OpenAddresses, which provides open data on global address coverage. Specifically,
+            we utilize the CountryWide dataset for Australia, available in CSV format. This dataset offers comprehensive
+            and accurate address information, which forms the basis for our address correction tool. The use of such a
+            reliable and extensive dataset ensures the robustness and reliability of our tool.
+        </p>
+
+        <h2 id="address-corruption">Address Corruption</h2>
+
+        <p>
+            The address corruption is simulated using a Python script. The script introduces errors into the address
+            data to simulate real-world inaccuracies that can occur due to various reasons such as typos, abbreviations,
+            and OCR errors. The script performs the following operations:
+        </p>
+
+        <ul>
+            <li>Random Insertion: A random character is inserted at a random position in the address string:</li>
+            <pre>
+                <code class="language-python rounded">   
+def random_insertion(address_string):
+    rand_index = random.randint(0, len(address_string))
+    rand_char = random.choice(string.ascii_letters)
+    return address_string[:rand_index] + rand_char + address_string[rand_index:]
+                </code>
+            </pre>
+            <li>Random Deletion: A random character is deleted from the address string:
+                <pre>
+                    <code class="language-python rounded">   
+def random_deletion(address_string):
+    if len(address_string) == 0:
+        return address_string
+    rand_index = random.randint(0, len(address_string) - 1)
+    return address_string[:rand_index] + address_string[rand_index + 1:]
+                    </code>
+                </pre>
+            </li>
+            <li>Random Substitution: A random character in the address string is replaced with another random character.
+                <pre>
+                    <code class="language-python rounded">   
+def random_substitution(address_string):
+    if len(address_string) == 0:
+        return address_string
+    rand_index = random.randint(0, len(address_string) - 1)
+    rand_char = random.choice(string.ascii_letters)
+    return address_string[:rand_index] + rand_char + address_string[rand_index + 1:]
+                    </code>
+                </pre>
+            </li>
+            <li>Random Transposition: Two adjacent characters in the address string are swapped.
+                <pre>
+                    <code class="language-python rounded">
+def random_transposition(address_string):
+    rand_index = random.randint(0, len(address_string) - 2)
+    return address_string[:rand_index] + address_string[rand_index + 1] + address_string[rand_index] + address_string[rand_index + 2:]
+                    </code>
+                </pre>
+            </li>
+            <li>OCR Error: Simulates errors that can occur during Optical Character Recognition (OCR) by replacing
+                certain characters with similar looking ones (e.g., 'O' with '0', 'I' with '1', etc.).
+            </li>
+            <li>Street Type Abbreviation: Common street types in the address string are replaced with their
+                abbreviations (e.g., 'Avenue' with 'Ave', 'Boulevard' with 'Blvd', etc.).</li>
+        </ul>
+
+        <p>
+            Each operation is chosen randomly for each address string. This helps in creating a diverse set of corrupted
+            addresses for testing the robustness of our address correction tool.
+        </p>
+
+
+
+    </div>
+    <div class="col mx-3">
+        <h2>Headings on this page</h2>
+        <ul>
+            <li><a href="/docs/#introduction">Introduction</a></li>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#advanced-usage">Advanced Usage</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<style>
+    li {
+        margin-bottom: 1rem;
+    }
+</style>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("OnAfterRenderAsync called."); // Debug statement
+            await JSRuntime.InvokeVoidAsync("console.log", "OnAfterRenderAsync called."); // Debug statement
+            await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}

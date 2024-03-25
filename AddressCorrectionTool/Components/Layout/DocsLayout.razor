@@ -1,0 +1,84 @@
+@layout MainLayout
+@inherits LayoutComponentBase
+
+
+<style>
+    a {
+        text-decoration: none
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-xl-2 pb-5">
+            <!-- Sidebar -->
+            <div class="accordion" id="sidebarAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Introduction
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#sidebarAccordion">
+                        <div class="accordion-body">
+                            <a class="" href="/docs/#introduction">Introduction</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                        <div class="accordion-body">
+                            <a class="" href="/docs/#getting-started">Quick start</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                        <div class="accordion-body">
+                            <a class="" href="/docs/#advanced-usage">Advanced Usage</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            Data
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+                        data-bs-parent="#sidebarAccordion">
+                        <div class="accordion-body">
+                            <a href="/docs/data#data-sources">Data Sources</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                        <div class="accordion-body">
+                            <a href="/docs/data#address-corruption">Address Corruption</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more accordion items as needed -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            API Documentation
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree"
+                        data-bs-parent="#sidebarAccordion">
+                        <div class="accordion-body">
+                            <a href="/docs/api">API Documentation</a>
+                            <!-- Add more links as needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="col-8">
+                @Body
+            </div>
+
+            <!-- Page content -->
+        </div>
+    </div>
+</div>

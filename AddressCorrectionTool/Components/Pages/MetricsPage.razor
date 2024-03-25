@@ -72,15 +72,18 @@
                                     <h5 class="card-title">Processing Time</h5>
                                     <p class="card-text">@if (meanProcessingTime > 0)
                                         {
-                                        <p>
-                                            Mean: @meanProcessingTime milliseconds
-                                        </p>
-                                        <p>
-                                            Maximum: @timeSeriesList.Max(x => x.ProcessingTime) milliseconds
-                                        </p>
-                                        <p>
-                                            Minimum: @timeSeriesList.Min(x => x.ProcessingTime) milliseconds
-                                        </p>
+                                        <div class="row">
+                                            <div class="col-5 text-start">Mean:</div>
+                                            <div class="col-7">@meanProcessingTime milliseconds</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-5 text-start">Maximum:</div>
+                                            <div class="col-7">@timeSeriesList.Max(x => x.ProcessingTime) milliseconds</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-5 text-start">Minimum:</div>
+                                            <div class="col-7">@timeSeriesList.Min(x => x.ProcessingTime) milliseconds</div>
+                                        </div>
                                         }
                                         else
                                         {
@@ -150,6 +153,7 @@
                                 <th scope="col">Original Suburb</th>
                                 <th scope="col">Miscorrected Address</th>
                                 <th scope="col">Miscorrected Suburb</th>
+                                <th scope="col">Result</th>
 
                             </tr>
                         </thead>
@@ -164,13 +168,14 @@
                                     {
                                         <tr>
 
-                                            <td>PEER STREET</td>
-                                            <td>WEST BATHUSRT
-                                                @address.Postcode</td>
                                             <td>@address.Street</td>
                                             <td>@address.City
+                                                @address.Postcode</td>
+                                            <td>@address.CorrectedStreet</td>
+                                            <td>@address.CorrectedCity
                                                 @address.Postcode
                                             </td>
+                                            <td>@address.Result</td>
 
                                         </tr>
 
@@ -184,11 +189,9 @@
             </div>
         </div>
     </div>
-
-    @* danger button to reset metrics *@
-
-
 </div>
+
+
 
 <script src="/javascript/charts.js"></script>
 
@@ -217,7 +220,6 @@
 
 
             Metrics metrics = await Http.GetFromJsonAsync<Metrics>(baseUrl + "/Metrics") ?? new Metrics();
-            Console.WriteLine(metrics.TotalAddresses);
             timeSeriesList = await Http.GetFromJsonAsync<List<TimeSeries>>(baseUrl + "/InputAddresses");
             if (timeSeriesList != null && timeSeriesList.Any())
             {
@@ -232,7 +234,6 @@ metrics.MiscorrectedAddresses }, metricsArray, 4);
             }
 
             correctedAddressList = await Http.GetFromJsonAsync<List<InputAddress>>(baseUrl + "/InputAddresses/CorrectedAddresses");
-
 
             isLoaded = true;
             StateHasChanged();
@@ -292,6 +293,8 @@ metrics.MiscorrectedAddresses }, metricsArray, 4);
         {
             Console.WriteLine("Failed to reset metrics");
         }
+
+        StateHasChanged();
     }
     public class TimeSeries
     {

@@ -44,7 +44,10 @@ public class InputAddress
     [Required]
     public string? Region { get; set; }
     public int? Result { get; set; } = 0;
-    public TimeSpan? Time { get; set; }
+    public long? ProcessingTime { get; set; }
+    public string? CorrectedStreet { get; set; }
+    public string? CorrectedCity { get; set; }
+    public DateTime TimeStamp { get; set; }
 }
 public class Metrics
 {

@@ -16,7 +16,7 @@ namespace AddressApi.Models
         public string? Longitude { get; set; }
         public string? Latitude { get; set; }
         public string? City { get; set; }
-        public int Postcode { get; set; }
+        public int? Postcode { get; set; }
         public string? Region { get; set; }
         public int Accuracy { get; set; }
     }
@@ -31,11 +31,13 @@ namespace AddressApi.Models
         public string? Street { get; set; }
         public string? Unit { get; set; }
         public string? City { get; set; }
-        public int Postcode { get; set; }
+        public int? Postcode { get; set; }
         public string? Region { get; set; }
         public int Result { get; set; }
         public float? Score { get; set; }
         public long? ProcessingTime { get; set; }
+        public string? CorrectedStreet { get; set; }
+        public string? CorrectedCity { get; set; }
         public DateTime TimeStamp { get; set; }
 
     }

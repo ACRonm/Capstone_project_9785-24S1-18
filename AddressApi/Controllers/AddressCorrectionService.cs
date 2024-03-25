@@ -16,14 +16,6 @@ namespace AddressApi.Controllers
             _context = context;
         }
 
-        public bool checkPostcode(int inputPostcode, int postcode)
-        {
-            // check if postcode is null
-            if (postcode == 0)
-                return false;
-            return Math.Abs(inputPostcode - postcode) <= 10;
-        }
-
         public async Task<InputAddress?> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -42,10 +34,16 @@ namespace AddressApi.Controllers
 
             List<Address> filteredAddresses;
 
-            filteredAddresses = addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
+            if (inputAddress.Postcode == null)
+            {
+                filteredAddresses = addresses;
+            }
+            else
+            {
+                filteredAddresses = addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
+            }
 
             // filteredAddresses = addresses.Where(a => Math.Abs(a.Postcode - inputAddress.Postcode) <= 10).ToList();
-
 
             HashSet<string> knownStreetNames = new HashSet<string>();
             HashSet<string> knownCityNames = new HashSet<string>();
@@ -74,17 +72,21 @@ namespace AddressApi.Controllers
                 {
 
                     Number = inputAddress.Number,
-                    Street = closestStreetMatchResult.Value,
+                    Street = inputAddress.Street,
                     Unit = inputAddress.Unit,
-                    City = closestCityMatchResult.Value,
+                    City = inputAddress.City,
                     Postcode = inputAddress.Postcode,
                     Region = inputAddress.Region,
-                    Result = 1
+                    Result = 1,
+                    CorrectedStreet = closestStreetMatchResult.Value,
+                    CorrectedCity = closestCityMatchResult.Value
                 };
             }
             else
             {
                 correctedAddress = inputAddress;
+                correctedAddress.CorrectedStreet = closestStreetMatchResult?.Value;
+                correctedAddress.CorrectedCity = closestCityMatchResult?.Value;
                 correctedAddress.Result = 0;
             }
 
@@ -137,7 +139,7 @@ namespace AddressApi.Controllers
 
             Metrics? metrics = _context.Metrics.Find(1);
 
-            if (originalAddress.City == correctedAddress.City && originalAddress.Street == correctedAddress.Street)
+            if (originalAddress.City == correctedAddress.CorrectedCity && originalAddress.Street == correctedAddress.CorrectedStreet)
             {
                 return correctedAddress;
             }

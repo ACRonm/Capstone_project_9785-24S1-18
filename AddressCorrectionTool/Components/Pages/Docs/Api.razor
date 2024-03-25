@@ -1,0 +1,118 @@
+@using Microsoft.JSInterop
+
+@layout AddressCorrectionTool.Components.Layout.DocsLayout
+
+@inject IJSRuntime JSRuntime
+
+@page "/docs/api"
+
+@rendermode InteractiveServer
+
+
+<div class="row">
+    <div class="col-12 col-xl-8">
+        <h1>API Documentation</h1>
+
+        <h2>Endpoints</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    GET {baseUrl}/InputAddresses/CorrectedAddresses
+                </div>
+                <p>Fetches all corrected addresses from the InputAddresses table.</p>
+                <p><strong>Response:</strong> A list of InputAddress objects if successful, or a 404 Not Found error if
+                    no
+                    addresses are
+                    found.</p>
+
+                <p>Returns a JSON response with a list of <a href="#">InputAddress</a> objects like this: </p>
+                <pre>
+                <code class="language-json rounded">
+        [{"Number":"24",
+        "Street":"CORDEAUXST",
+        "Unit":"",
+        "City":"WILOLW VALE",
+        "Postcode":2575,
+        "Region":"NSW",
+        "Result":1,
+        "ProcessingTime":27,
+        "CorrectedStreet":"CORDEAUX STREET",
+        "CorrectedCity":"WILLOW VALE",
+        "TimeStamp":"2024-03-22T17:02:36.1573308"},
+
+        {"Number":"72-74",
+        "Street":"KING GEORES RD.",
+        "Unit":"UNIT 9",
+        "City":"WILEY PjRK","Postcode":2195,
+        "Region":"NSW","Result":1,
+        "ProcessingTime":24,
+        "CorrectedStreet":"KING GEORGES ROAD",
+        "CorrectedCity":"WILEY PARK",
+        "TimeStamp":"2024-03-22T17:02:36.1861561"}]
+                </code>
+                </pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-warning " role="alert">
+                    POST {baseUrl}/Metrics
+                </div>
+                <h3></h3>
+                <p>Adds a new Metrics object to the database.</p>
+                <p><strong>Request body:</strong> A Metrics object.</p>
+                <p><strong>Response:</strong>
+                <p>
+                    <strong>Success:</strong> <a href="">Metrics</a> object
+
+                <p>
+                    <strong>Failure:</strong> 404 Not Found
+                </p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-warning " role="alert">
+                    POST {baseUrl}/BatchInputAddresses
+                </div>
+                <p>Corrects a batch of input addresses and adds them to the database.</p>
+                <p><strong>Request body:</strong> An <a href="#">Address</a> object.</p>
+                <p><strong>Response:</strong>
+                <p>
+                    <strong>Success:</strong> InputAddress object
+
+                <p>
+                    <strong>Failure:</strong> 404 Not Found
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col mx-3">
+        <h2>Headings on this page</h2>
+        <ul>
+            <li><a href="/docs/#introduction">Introduction</a></li>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#advanced-usage">Advanced Usage</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </div>
+
+
+</div>
+
+<!-- Add the rest of your endpoints here -->
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("OnAfterRenderAsync called."); // Debug statement
+            await JSRuntime.InvokeVoidAsync("console.log", "OnAfterRenderAsync called."); // Debug statement
+            await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}

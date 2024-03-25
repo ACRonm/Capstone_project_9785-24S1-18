@@ -37,6 +37,14 @@
       "PackagePath": "staticwebassets\\css\\general.css"
     },
     {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark-dimmed.min.css",
+      "PackagePath": "staticwebassets\\css\\github-dark-dimmed.min.css"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark.css",
+      "PackagePath": "staticwebassets\\css\\github-dark.css"
+    },
+    {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
       "PackagePath": "staticwebassets\\favicon-16x16.png"
     },
@@ -63,6 +71,14 @@
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\file_download.js",
       "PackagePath": "staticwebassets\\javascript\\file_download.js"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\highlight.min.js",
+      "PackagePath": "staticwebassets\\javascript\\highlight.min.js"
+    },
+    {
+      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\json.min.js",
+      "PackagePath": "staticwebassets\\javascript\\json.min.js"
     },
     {
       "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",
