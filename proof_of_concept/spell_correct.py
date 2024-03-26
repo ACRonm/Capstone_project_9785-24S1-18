@@ -81,8 +81,8 @@ def check_results(repaired_addresses, correct_addresses):
                         f"\nAddress {repaired_address.id} was not repaired correctly.")
                     print(f"Original: {correct_address.get_full_address()}")
                     print(f"Repaired: {repaired_address.get_full_address()}")
-                    print(f"Misspelt: {repaired_address.get_address_by_id(
-                        repaired_address.id, misspelt_addresses).get_full_address()}")
+                    print(
+                        f"Misspelt: {repaired_address.get_address_by_id(repaired_address.id, misspelt_addresses).get_full_address()}")
                     print("\n")
 
                 break
