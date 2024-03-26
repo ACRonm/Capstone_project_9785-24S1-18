@@ -8,6 +8,7 @@
 
 @rendermode InteractiveServer
 
+<PageTitle>Documentation - API</PageTitle>
 
 <div class="row">
     <div class="col-12 col-xl-8">
@@ -110,8 +111,6 @@
     {
         if (firstRender)
         {
-            Console.WriteLine("OnAfterRenderAsync called."); // Debug statement
-            await JSRuntime.InvokeVoidAsync("console.log", "OnAfterRenderAsync called."); // Debug statement
             await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
         }
     }

@@ -75,6 +75,9 @@ namespace AddressApi.Migrations
                     b.Property<string>("CorrectedCity")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CorrectedPostcode")
+                        .HasColumnType("int");
+
                     b.Property<string>("CorrectedStreet")
                         .HasColumnType("nvarchar(max)");
 

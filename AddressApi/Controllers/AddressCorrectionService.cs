@@ -2,6 +2,11 @@
 using CsvHelper;
 using System.Globalization;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using FuzzySharp;
+using FuzzySharp.SimilarityRatio;
+using FuzzySharp.SimilarityRatio.Scorer.StrategySensitive;
+using System.Diagnostics.Metrics;
 
 namespace AddressApi.Controllers
 {
@@ -18,6 +23,10 @@ namespace AddressApi.Controllers
 
         public async Task<InputAddress?> CorrectAddressAsync(InputAddress inputAddress, List<Address> addresses)
         {
+            InputAddress correctedAddress = new InputAddress();
+
+            Console.WriteLine("Correcting address: " + inputAddress.Number + " " + inputAddress.Street + " " + inputAddress.City + " " + inputAddress.Postcode + " " + inputAddress.Region);
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Restart();
 
@@ -32,63 +41,80 @@ namespace AddressApi.Controllers
             string inputStreetName = inputAddress.Street.ToUpper();
             string inputCityName = inputAddress.City.ToUpper();
 
+            // replace street type abbreviations with full words if they exist
+            inputStreetName = Regex.Replace(inputStreetName, @"\bST\b|\bST\.\b", "STREET");
+            inputStreetName = Regex.Replace(inputStreetName, @"\bRD\b|\bRD\.\b", "ROAD");
+            inputStreetName = Regex.Replace(inputStreetName, @"\bCR\b|\bCR\.\b", "CRESCENT");
+            inputStreetName = Regex.Replace(inputStreetName, @"\bDR\b|\bDR\.\b", "DRIVE");
+
             List<Address> filteredAddresses;
-
-            if (inputAddress.Postcode == null)
-            {
-                filteredAddresses = addresses;
-            }
-            else
-            {
-                filteredAddresses = addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
-            }
-
-            // filteredAddresses = addresses.Where(a => Math.Abs(a.Postcode - inputAddress.Postcode) <= 10).ToList();
 
             HashSet<string> knownStreetNames = new HashSet<string>();
             HashSet<string> knownCityNames = new HashSet<string>();
 
-            foreach (Address address in filteredAddresses)
+
+            bool addressFound = false;
+            int counter = 0;
+
+
+            while (!addressFound)
             {
-                knownStreetNames.Add(address.Street);
-                knownCityNames.Add(address.City);
-            }
 
-            var closestStreetMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames));
-            var closestCityMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames));
 
-            // Wait for both tasks to complete
-            Task.WaitAll(closestStreetMatchTask, closestCityMatchTask);
+                if (counter > 2)
+                    break;
 
-            // Get the results
-            var closestStreetMatchResult = closestStreetMatchTask.Result;
-            var closestCityMatchResult = closestCityMatchTask.Result;
+                filteredAddresses = FilterAddresses(addresses, counter, inputAddress);
 
-            InputAddress correctedAddress;
-
-            if (closestStreetMatchResult?.Score > 66 && closestCityMatchResult?.Score > 66)
-            {
-                correctedAddress = new InputAddress
+                foreach (Address address in filteredAddresses)
                 {
+                    knownStreetNames.Add(address.Street);
+                    knownCityNames.Add(address.City);
+                }
 
-                    Number = inputAddress.Number,
-                    Street = inputAddress.Street,
-                    Unit = inputAddress.Unit,
-                    City = inputAddress.City,
-                    Postcode = inputAddress.Postcode,
-                    Region = inputAddress.Region,
-                    Result = 1,
-                    CorrectedStreet = closestStreetMatchResult.Value,
-                    CorrectedCity = closestCityMatchResult.Value
-                };
+                var closestStreetMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputStreetName, knownStreetNames, s => s, ScorerCache.Get<DefaultRatioScorer>()));
+                var closestCityMatchTask = Task.Run(() => FuzzySharp.Process.ExtractOne(inputCityName, knownCityNames, s => s, ScorerCache.Get<DefaultRatioScorer>()));
+
+
+                // Wait for both tasks to complete
+                Task.WaitAll(closestStreetMatchTask, closestCityMatchTask);
+
+                // Get the results
+                var closestStreetMatchResult = closestStreetMatchTask.Result;
+                var closestCityMatchResult = closestCityMatchTask.Result;
+
+
+                if (closestStreetMatchResult?.Score > 40 && closestCityMatchResult?.Score > 40)
+                {
+                    addressFound = true;
+
+                    correctedAddress = new InputAddress
+                    {
+
+                        Number = inputAddress.Number,
+                        Street = inputAddress.Street,
+                        Unit = inputAddress.Unit,
+                        City = inputAddress.City,
+                        Postcode = inputAddress.Postcode,
+                        Region = inputAddress.Region,
+                        Result = 1,
+                        CorrectedStreet = closestStreetMatchResult.Value,
+                        CorrectedCity = closestCityMatchResult.Value,
+                        CorrectedPostcode = filteredAddresses.Find(a => a.Street == closestStreetMatchResult.Value && a.City == closestCityMatchResult.Value)?.Postcode,
+                    };
+                    addressFound = true;
+                }
+                else
+                {
+                    correctedAddress = inputAddress;
+                    correctedAddress.CorrectedStreet = closestStreetMatchResult?.Value;
+                    correctedAddress.CorrectedCity = closestCityMatchResult?.Value;
+                    correctedAddress.CorrectedPostcode = inputAddress.Postcode;
+                    correctedAddress.Result = 0;
+                }
+                counter++;
             }
-            else
-            {
-                correctedAddress = inputAddress;
-                correctedAddress.CorrectedStreet = closestStreetMatchResult?.Value;
-                correctedAddress.CorrectedCity = closestCityMatchResult?.Value;
-                correctedAddress.Result = 0;
-            }
+
 
             Metrics? metrics = _context.Metrics.Find(1);
 
@@ -100,7 +126,7 @@ namespace AddressApi.Controllers
             {
                 metrics.TotalAddresses++;
 
-                if (correctedAddress != null && correctedAddress.Result == 0)
+                if (correctedAddress.Result == 0)
                 {
                     metrics.FailedAddresses++;
                 }
@@ -146,8 +172,8 @@ namespace AddressApi.Controllers
             else if (metrics != null) // if the corrected address is different from the original address but it was still corrected, then the correction was incorrect. We need to track this, so we increment the miscalculated addresses metric and decrement the corrected addresses metric
             {
 
-                correctedAddress.Result = 0;
-                // increment the miscalcalculated addresses metric
+                correctedAddress.Result = 2;
+                // increment the miscorrected addresses metric
                 metrics.MiscorrectedAddresses++;
                 // decrement the corrected addresses metric
                 metrics.CorrectedAddresses--;
@@ -158,6 +184,23 @@ namespace AddressApi.Controllers
             return correctedAddress;
         }
 
+        private List<Address> FilterAddresses(List<Address> addresses, int counter, InputAddress inputAddress)
+        {
+            if (counter == 0)
+            {
+                // filter addresses by postcode
+                return addresses.Where(a => a.Postcode == inputAddress.Postcode).ToList();
+            }
+            else if (counter == 1)
+            {
+                // filter addresses by region
+                return addresses.Where(a => a.Region == inputAddress.Region).ToList();
+            }
+            else
+            {
+                return addresses;
+            }
+        }
 
         public async Task<List<Address>> LoadAddressesFromCsvAsync(AddressContext context)
         {

@@ -1,50 +1,105 @@
 @page "/docs"
 @layout AddressCorrectionTool.Components.Layout.DocsLayout
 
-
+<PageTitle>Documentation</PageTitle>
 
 <body>
     <div class="row">
 
         <div class="col-8">
-            <h1 id="introduction">Introduction</h1>
-            <p class="lead pb-3">
-                Welcome to the Address Correction Tool documentation. This tool is designed to help you correct and
-                standardize addresses.
-            <ul>
-                <li>
-                    You can view our source code here: <a
-                        href="https://github.com/ACRonm/Capstone_project_9785-24S1-18"> Source </a>
-                </li>
-                <li>
-                    You can view our open source licenses here: <a href="/licenses"> Licenses </a>
-                </li>
+            <section>
+                <div class="card">
+                    <div class="card-body">
+                        <h1 id="introduction" class="card-title">Introduction</h1>
+                        <p class="lead pb-3 card-text">
+                            Welcome to the Address Correction Tool documentation. This tool is designed to help you
+                            correct and
+                            standardize addresses.
+                        </p>
+                        <ul class="card-text">
+                            <li>
+                                You can view our source code here: <a
+                                    href="https://github.com/ACRonm/Capstone_project_9785-24S1-18" class="card-link">
+                                    Source </a>
+                            </li>
+                            <li>
+                                You can view our open source licenses here: <a href="/licenses" class="card-link">
+                                    Licenses </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-            </ul>
-            </p>
-            <h1 id="getting-started">Quick start</h1>
-            <p>
-                This tool is designed to be API-first, meaning it is primarily intended to be used programmatically.
-                However, we also provide a web interface for testing and manual operations. This allows you to easily
-                test the functionality and see the results in real-time before integrating it into your own
-                applications.
-            </p>
+                <p>This project was created as the final "Capstone" project for the University of Canberra with
+                    sponsorship by the Australian Bureau of Statistics </p>
+            </section>
 
-            <p>
-                We have designed this tool to be easy to use, with a seamless web user interface. To get started, create
-                an account and log in. Once you are logged in, you can start correcting addresses by clicking on <a
-                    href="/address-correction"> Submit Addresses</a>.
-            </p>
+            <section>
+                <h1 id="getting-started">Quick start</h1>
+                <p>
+                    This tool prioritizes programmatic use with a powerful API at its core. Additionally, we offer a
+                    user-friendly web interface for testing and manual operations, allowing you to easily preview
+                    results
+                    before integrating the tool into your applications. To get started using the web interface, simply
+                    create an account and log in. Once logged in, submit your addresses for correction.
+                </p>
 
-            <h1 id="advanced-usage">Advanced Usage</h1>
-            <p>
-                If you are a developer and want to integrate this tool into your own applications, you can use our API.
-                The API is designed to be simple and easy to use, with a RESTful interface. You can find the API
-                documentation <a href="docs/api">here</a>.
-            </p>
-
-
+                <p>
+                    We have designed this tool to be easy to use, with a seamless web user interface. To get started,
+                    create
+                    an account and log in. Once you are logged in, you can start correcting addresses by clicking on <a
+                        href="/address-correction"> Submit Addresses</a>.
+                </p>
+            </section>
+            <section>
+                <h1 id="advanced-usage">Advanced Usage</h1>
+                <p>
+                    If you are a developer and want to integrate this tool into your applications, you can use our API.
+                    The
+                    API is designed to be simple and easy to use, with a RESTful interface. You can find the API
+                    documentation here.
+                </p>
+                <p>
+                    Developers can leverage our <a href="/docs/api">RESTful API</a> for seamless integration into their
+                    applications.
+                </p>
+            </section>
+            <section>
+                <h1 id="future-development">Future Development</h1>
+                <h2>Limitations</h2>
+                <p>
+                    There are some limitations to the current solution. It uses traditional string-matching techniques
+                    to
+                    accurately match street names and suburbs to an authoritative database.
+                </p>
+                <p>
+                    One of the main issues with the current system is its ability to adapt to new data (addresses), this
+                    is
+                    because it uses an authoritative database, which can lead to inaccurate corrections or missed
+                    opportunities for standardisation.
+                </p>
+                <p>
+                    The accuracy of the tool heavily relies on the accuracy and completeness of the authoritative
+                    database
+                    itself. Errors or inconsistencies in the database can propagate to the correction results.
+                </p>
+                <h2>
+                    Future Development Ideas
+                </h2>
+                <p>
+                    To improve the accuracy and completeness of the tool, we can implement machine learning techniques
+                    to
+                    learn from the data and adapt to new addresses. This can help the tool to correct addresses more
+                    accurately and efficiently.
+                </p>
+                <p>
+                    More importantly, the scope of this project was not infinite, and some issues could not be added or
+                    would take additional time to implement.
+                </p>
+            </section>
         </div>
+
+
         <div class="col mx-3">
             <h2>Headings on this page</h2>
             <ul>

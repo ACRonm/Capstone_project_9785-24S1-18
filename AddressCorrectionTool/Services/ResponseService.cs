@@ -17,7 +17,7 @@ namespace AddressCorrectionTool.Services
             }
             else if (CorrectedAddress.Unit != null)
             {
-                return $"UNIT {CorrectedAddress.Unit} of {CorrectedAddress.Number} {CorrectedAddress.Street} {CorrectedAddress.City} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
+                return $"UNIT {CorrectedAddress.Unit} of {CorrectedAddress.Number} {CorrectedAddress.CorrectedStreet} {CorrectedAddress.CorrectedCity} {CorrectedAddress.Postcode} {CorrectedAddress.Region}";
             }
             else
             {

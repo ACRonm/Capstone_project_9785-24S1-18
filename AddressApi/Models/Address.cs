@@ -38,6 +38,7 @@ namespace AddressApi.Models
         public long? ProcessingTime { get; set; }
         public string? CorrectedStreet { get; set; }
         public string? CorrectedCity { get; set; }
+        public int? CorrectedPostcode { get; set; }
         public DateTime TimeStamp { get; set; }
 
     }

@@ -86,7 +86,7 @@ def simulate_street_type_abbreviation(address_string):
         "Boulevard": ["Blvd", "Blvd.", "Bv"],
         "Promenade": ["Prom", "Prom."],
         "Drive": {"Dr", "Dr.", "Drv"},
-        "Street": {"St", "St.", "Str"},
+        "Street": {"St", "St."},
         "Road": {"Rd", "Rd.", "R"},
         "Lane": {"Ln", "Ln.", "La"},
         "Parkway": {"Pkwy", "Pkwy.", "Pky"},
@@ -107,11 +107,7 @@ def simulate_street_type_abbreviation(address_string):
         "Cove": {"Cv", "Cv."},
         "Gardens": {"Gdns", "Gdns."},
         "Green": {"Grn", "Grn."},
-        "North": {"N", "N."},
-        "South": {"S", "S."},
         "Terrace": {"Ter", "Ter."},
-        "West": {"W", "W."},
-        "East": {"E", "E."},
         "Place": {"Pl", "Pl."},
         "Circuit": {"Cct", "Cct."},
         "Parade": {"Pde", "Pde."},
@@ -148,3 +144,53 @@ def simulate_street_type_abbreviation(address_string):
             address_string = street_name + " " + street_type
 
     return address_string
+
+
+def simulate_postcode_errors(postcode):
+    # Define operation functions
+    def random_insertion(postcode):
+        rand_index = random.randint(0, len(postcode))
+        rand_char = random.choice(string.digits)
+        return postcode[:rand_index] + rand_char + postcode[rand_index:]
+
+    def random_deletion(postcode):
+        if len(postcode) == 0:
+            return postcode
+        rand_index = random.randint(0, len(postcode) - 1)
+        return postcode[:rand_index] + postcode[rand_index + 1:]
+
+    def random_substitution(postcode):
+        if len(postcode) == 0:
+            return postcode
+        rand_index = random.randint(0, len(postcode) - 1)
+        rand_char = random.choice(string.digits)
+        return postcode[:rand_index] + rand_char + postcode[rand_index + 1:]
+
+    def random_transposition(postcode):
+        if len(postcode) < 2:
+            return postcode
+        rand_index = random.randint(0, len(postcode) - 2)
+        return postcode[:rand_index] + postcode[rand_index + 1] + postcode[rand_index] + postcode[rand_index + 2:]
+
+    def do_nothing(postcode):
+        return postcode
+
+        # ocr errors are a common source of errors in address data
+        # we will simulate this by randomly replacing a character with a similar looking character
+        # for example, 0 with O, 1 with I, 2 with Z, etc.
+        # we will also add some random noise to the address
+
+        # Define a dictionary of similar looking characters
+
+        # if the string contains a number in the similar_chars dictionary, replace it with a similar looking letter
+
+    # Choose a random operation to apply
+    operations = [random_insertion, random_deletion,
+                  random_substitution, random_transposition]
+
+    if random.random() < 0.1:
+        rand_operation = random.choice(operations)
+    else:
+        rand_operation = do_nothing
+
+    return rand_operation(postcode)

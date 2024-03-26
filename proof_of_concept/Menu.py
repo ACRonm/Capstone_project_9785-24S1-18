@@ -60,6 +60,8 @@ class Menu:
             for address in tqdm(misspelt_addresses, desc="Applying entropy"):
                 address.street = entropy.simulate_errors(address.street)
                 address.city = entropy.simulate_errors(address.city)
+                address.postcode = entropy.simulate_postcode_errors(
+                    address.postcode)
 
             # save as csv
             write_to_csv('./data/au_misspelt.csv', misspelt_addresses)
@@ -159,7 +161,7 @@ def load_into_memory(filename, read_all=False):
                 # load all addresses
                 continue
             else:
-                if len(addresses) > 3000:
+                if len(addresses) > 1000:
                     break
     return addresses
 

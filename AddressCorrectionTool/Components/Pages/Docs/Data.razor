@@ -7,44 +7,141 @@
 
 @rendermode InteractiveServer
 
+<PageTitle>Documentation - Data</PageTitle>
 
 
 <div class="row">
     <div class="col-8">
-        <h1>Data</h1>
 
-        <p>
-            This page provides information about our data sources and how we engineer and generate our data using Python
-            scripts.
-        </p>
+        <section>
+            <h1>Data</h1>
 
-        <h2 id="data-sources">Data Sources</h2>
+            <p>
+                This page provides information about our data sources and how we engineer and generate our data using
+                Python
+                scripts.
+            </p>
+        </section>
 
-        <p>
-            Our primary data source is OpenAddresses, which provides open data on global address coverage. Specifically,
-            we utilize the CountryWide dataset for Australia, available in CSV format. This dataset offers comprehensive
-            and accurate address information, which forms the basis for our address correction tool. The use of such a
-            reliable and extensive dataset ensures the robustness and reliability of our tool.
-        </p>
+        <section>
+            <h2 id="data-classes">Data Classes</h2>
 
-        <p>OpenAddresses' Australian Countrywide dataset consisted of, at the time of making this application, over
-            15,000,000 addresses. To increase performance, this was deduplicated,
-            resulting in 518,181 unique addresses.
-        </p>
+            <p>
+                Our data classes are designed to represent the address data in a structured and organized manner. The
+                classes
+                are used to store the address information and provide methods for manipulating and processing the data.
+                All data classes are stored in SQL Server and are accessed through Entity Framework Core. The following
+                are the data classes used in our address correction tool:
+            </p>
 
-        <h2 id="address-corruption">Address String Corruption</h2>
+            <ul>
+                <li>
+                    <strong>Address:</strong> Represents an address entity with the following properties:
+                    <pre>
+                        <code class="language-csharp rounded">
+public class Address
+{
+    public string? Id { get; set; }
+    public string? Number { get; set; }
+    public string? Street { get; set; }
+    public string? Unit { get; set; }
+    public string? Longitude { get; set; }
+    public string? Latitude { get; set; }
+    public string? City { get; set; }
+    public int Postcode { get; set; }
+    public string? Region { get; set; }
+    public int Accuracy { get; set; }
+}
 
-        <p>
-            The address corruption is simulated using a Python script. Each part of the whole address string is
-            independently corrupted, including the Street Name, Suburb Name and Postcode. The script introduces errors
-            into the address
-            data to simulate real-world inaccuracies that can occur due to various reasons such as typos, abbreviations,
-            and OCR errors. The script performs the following operations:
-        </p>
+                        </code>
+                    </pre>
+                </li>
+                <li>
+                    <strong>InputAddress:</strong> Represents an input address entity. Input addresses contain only
+                    address string and correction information. They also contain data annotations for form submission
+                    for certain required attributes. They do not contain logitude or latitude information.
+                    <pre>
+                        <code class="language-csharp rounded">
+public class InputAddress
+{
+    [Required]
+    public string? Number { get; set; }
+    [Required]
+    public string? Street { get; set; }
+    public string? Unit { get; set; }
+    [Required]
+    public string? City { get; set; }
+    [Required]
+    public int? Postcode { get; set; }
+    [Required]
+    public string? Region { get; set; }
+    public int? Result { get; set; } = 0;
+    public long? ProcessingTime { get; set; }
+    public string? CorrectedStreet { get; set; }
+    public string? CorrectedCity { get; set; }
+    public DateTime TimeStamp { get; set; }
+}
 
-        <ul>
-            <li>Random Insertion: A random character is inserted at a random position in the address string:</li>
-            <pre>
+                        </code>
+                    </pre>
+                </li>
+                <li>
+                    <strong>Metrics:</strong> Represents a metrics entity. The metrics entity stores the total number of
+                    addresses, the number of corrected addresses, the number of failed addresses, and the number of
+                    miscorrected addresses. Useful for tracking the performance of the address correction tool. You can
+                    check out the <a href="/docs/metrics">Metrics</a> page for more information.
+                    <pre>
+                        <code class="language-csharp rounded">
+public class Metrics
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    public int TotalAddresses { get; set; }
+    public int CorrectedAddresses { get; set; }
+    public int FailedAddresses { get; set; }
+    public int MiscorrectedAddresses { get; set; }
+}
+                        </code>
+                    </pre>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 id="data-sources">Data Sources</h2>
+
+            <p>
+                Our primary data source is OpenAddresses, which provides open data on global address coverage.
+                Specifically,
+                we utilize the CountryWide dataset for Australia, available in CSV format. This dataset offers
+                comprehensive
+                and accurate address information, which forms the basis for our address correction tool. The use of such
+                a
+                reliable and extensive dataset ensures the robustness and reliability of our tool.
+            </p>
+
+            <p>OpenAddresses' Australian Countrywide dataset consisted of, at the time of making this application, over
+                15,000,000 addresses. To increase performance, this was deduplicated,
+                resulting in 518,181 unique addresses.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="address-corruption">Address String Corruption</h2>
+
+            <p>
+                The address corruption is simulated using a Python script. Each part of the whole address string is
+                independently corrupted, including the Street Name, Suburb Name and Postcode. The script introduces
+                errors
+                into the address
+                data to simulate real-world inaccuracies that can occur due to various reasons such as typos,
+                abbreviations,
+                and OCR errors. The script performs the following operations:
+            </p>
+
+            <ul>
+                <li>Random Insertion: A random character is inserted at a random position in the address string:</li>
+                <pre>
                 <code class="language-python rounded">   
 def random_insertion(address_string):
     rand_index = random.randint(0, len(address_string))
@@ -52,8 +149,8 @@ def random_insertion(address_string):
     return address_string[:rand_index] + rand_char + address_string[rand_index:]
                 </code>
             </pre>
-            <li>Random Deletion: A random character is deleted from the address string:
-                <pre>
+                <li>Random Deletion: A random character is deleted from the address string:
+                    <pre>
                     <code class="language-python rounded">   
 def random_deletion(address_string):
     if len(address_string) == 0:
@@ -62,9 +159,10 @@ def random_deletion(address_string):
     return address_string[:rand_index] + address_string[rand_index + 1:]
                     </code>
                 </pre>
-            </li>
-            <li>Random Substitution: A random character in the address string is replaced with another random character.
-                <pre>
+                </li>
+                <li>Random Substitution: A random character in the address string is replaced with another random
+                    character.
+                    <pre>
                     <code class="language-python rounded">   
 def random_substitution(address_string):
     if len(address_string) == 0:
@@ -74,27 +172,71 @@ def random_substitution(address_string):
     return address_string[:rand_index] + rand_char + address_string[rand_index + 1:]
                     </code>
                 </pre>
-            </li>
-            <li>Random Transposition: Two adjacent characters in the address string are swapped.
-                <pre>
+                </li>
+                <li>Random Transposition: Two adjacent characters in the address string are swapped.
+                    <pre>
                     <code class="language-python rounded">
 def random_transposition(address_string):
     rand_index = random.randint(0, len(address_string) - 2)
     return address_string[:rand_index] + address_string[rand_index + 1] + address_string[rand_index] + address_string[rand_index + 2:]
                     </code>
                 </pre>
-            </li>
-            <li>OCR Error: Simulates errors that can occur during Optical Character Recognition (OCR) by replacing
-                certain characters with similar looking ones (e.g., 'O' with '0', 'I' with '1', etc.).
-            </li>
-            <li>Street Type Abbreviation: Common street types in the address string are replaced with their
-                abbreviations (e.g., 'Avenue' with 'Ave', 'Boulevard' with 'Blvd', etc.).</li>
-        </ul>
+                </li>
+                <li>OCR Error: Simulates errors that can occur during Optical Character Recognition (OCR) by replacing
+                    certain characters with similar looking ones (e.g., 'O' with '0', 'I' with '1', etc.).
+                </li>
+                <li>Street Type Abbreviation: Common street types in the address string are replaced with their
+                    abbreviations (e.g., 'Avenue' with 'Ave', 'Boulevard' with 'Blvd', etc.).</li>
+            </ul>
 
-        <p>
-            Each operation is chosen randomly for each address string. This helps in creating a diverse set of corrupted
-            addresses for testing the robustness of our address correction tool.
-        </p>
+            <p>
+                Each operation is chosen randomly for each address string. This helps in creating a diverse set of
+                corrupted
+                addresses for testing the robustness of our address correction tool.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="address-correction">Address String Correction</h2>
+
+            <p>
+                The address correction is performed by our backend API, which uses the FuzzySharp library to correct the
+                address strings
+                generated by the address corruption script. The script performs the following operations:
+            </p>
+
+            <ul>
+
+                <li>Address Filtering: To increase performance, our API will first filter by locality (postcode,
+                    suburb), and then widen these parameters if it is unable to find a match.</li>
+                <li>Levenshtein Distance: The Levenshtein distance between the corrupted address string and all the
+                    addresses
+                    in the dataset is calculated. The Levenshtein distance is a measure of the similarity between two
+                    strings. It is defined as the minimum number of single-character edits (insertions, deletions, or
+                    substitutions) required to change one string into another.</li>
+                <li>Thresholding: A threshold is set to filter out addresses with a Levenshtein distance greater than a
+                    certain value. This helps in reducing the search space and improving the performance of the
+                    correction
+                    algorithm.</li>
+                <li>Ranking: The addresses with a Levenshtein distance less than the threshold are ranked based on their
+                    similarity to the corrupted address string. The ranking is done using the Levenshtein distance, with
+                    lower
+                    distances indicating higher similarity.</li>
+                <li>Correction: The top-ranked address is selected as the corrected address string. If multiple
+                    addresses
+                    have the same Levenshtein distance, the first address in the list is chosen as the corrected
+                    address.</li>
+            </ul>
+
+            <p>
+                The correction script uses the <a href="https://www.nuget.org/packages/FuzzySharp">nuget-FuzzySharp</a>
+                library to calculate the Levenshtein distance between strings. The library provides an efficient
+                implementation of the Levenshtein distance algorithm in C Sharp, which helps in improving the
+                performance of
+                the
+                correction algorithm.
+            </p>
+        </section>
 
         <h2 id="address-correction"></h2>
     </div>
@@ -110,12 +252,6 @@ def random_transposition(address_string):
     </div>
 
 </div>
-
-<style>
-    li {
-        margin-bottom: 1rem;
-    }
-</style>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
