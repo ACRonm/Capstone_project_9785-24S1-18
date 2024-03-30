@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AddressApi.Migrations
 {
     [DbContext(typeof(AddressContext))]
-    [Migration("20240322012854_LocalServerInitialMigration")]
-    partial class LocalServerInitialMigration
+    [Migration("20240327005024_InitialMigrationLaptop")]
+    partial class InitialMigrationLaptop
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,7 +45,7 @@ namespace AddressApi.Migrations
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Postcode")
+                    b.Property<int?>("Postcode")
                         .HasColumnType("int");
 
                     b.Property<string>("Region")
@@ -75,10 +75,19 @@ namespace AddressApi.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CorrectedCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CorrectedPostcode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CorrectedStreet")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Postcode")
+                    b.Property<int?>("Postcode")
                         .HasColumnType("int");
 
                     b.Property<long?>("ProcessingTime")

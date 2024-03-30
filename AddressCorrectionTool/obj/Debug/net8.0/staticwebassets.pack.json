@@ -1,95 +1,99 @@
 {
   "Files": [
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AddressCorrectionTool.bundle.scp.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AddressCorrectionTool.bundle.scp.css",
       "PackagePath": "staticwebassets\\AddressCorrectionTool.bundle.scp.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-192x192.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-192x192.png",
       "PackagePath": "staticwebassets\\android-chrome-192x192.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-512x512.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\android-chrome-512x512.png",
       "PackagePath": "staticwebassets\\android-chrome-512x512.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\app.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\apple-touch-icon.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\apple-touch-icon.png",
       "PackagePath": "staticwebassets\\apple-touch-icon.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\AddressCorrection.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\AddressCorrection.css",
       "PackagePath": "staticwebassets\\css\\AddressCorrection.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\general.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\docs.css",
+      "PackagePath": "staticwebassets\\css\\docs.css"
+    },
+    {
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\general.css",
       "PackagePath": "staticwebassets\\css\\general.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark-dimmed.min.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark-dimmed.min.css",
       "PackagePath": "staticwebassets\\css\\github-dark-dimmed.min.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark.css",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\css\\github-dark.css",
       "PackagePath": "staticwebassets\\css\\github-dark.css"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-16x16.png",
       "PackagePath": "staticwebassets\\favicon-16x16.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-32x32.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon-32x32.png",
       "PackagePath": "staticwebassets\\favicon-32x32.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.ico",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo.png",
       "PackagePath": "staticwebassets\\images\\UC_Logo.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo_sm.png",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\images\\UC_Logo_sm.png",
       "PackagePath": "staticwebassets\\images\\UC_Logo_sm.png"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\charts.js",
       "PackagePath": "staticwebassets\\javascript\\charts.js"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\file_download.js",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\file_download.js",
       "PackagePath": "staticwebassets\\javascript\\file_download.js"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\highlight.min.js",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\highlight.min.js",
       "PackagePath": "staticwebassets\\javascript\\highlight.min.js"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\json.min.js",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\json.min.js",
       "PackagePath": "staticwebassets\\javascript\\json.min.js"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\python.js",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\javascript\\python.js",
       "PackagePath": "staticwebassets\\javascript\\python.js"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\sample.csv",
       "PackagePath": "staticwebassets\\sample.csv"
     },
     {
-      "Id": "D:\\University\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\site.webmanifest",
+      "Id": "E:\\University_of_Canberra\\Semester_6\\Capstone\\Capstone_project_9785-24S1-18\\AddressCorrectionTool\\wwwroot\\site.webmanifest",
       "PackagePath": "staticwebassets\\site.webmanifest"
     },
     {

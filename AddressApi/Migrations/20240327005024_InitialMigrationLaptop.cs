@@ -6,21 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AddressApi.Migrations
 {
     /// <inheritdoc />
-    public partial class LocalServerInitialMigration : Migration
+    public partial class InitialMigrationLaptop : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //drop all tables
-            migrationBuilder.DropTable(
-                name: "Addresses");
-
-            migrationBuilder.DropTable(
-                name: "InputAddresses");
-
-            migrationBuilder.DropTable(
-                name: "Metrics");
-
             migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
@@ -32,7 +22,7 @@ namespace AddressApi.Migrations
                     Longitude = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Latitude = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Postcode = table.Column<int>(type: "int", nullable: false),
+                    Postcode = table.Column<int>(type: "int", nullable: true),
                     Region = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Accuracy = table.Column<int>(type: "int", nullable: false)
                 },
@@ -51,11 +41,14 @@ namespace AddressApi.Migrations
                     Street = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Postcode = table.Column<int>(type: "int", nullable: false),
+                    Postcode = table.Column<int>(type: "int", nullable: true),
                     Region = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Result = table.Column<int>(type: "int", nullable: false),
                     Score = table.Column<float>(type: "real", nullable: true),
                     ProcessingTime = table.Column<long>(type: "bigint", nullable: true),
+                    CorrectedStreet = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CorrectedCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CorrectedPostcode = table.Column<int>(type: "int", nullable: true),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

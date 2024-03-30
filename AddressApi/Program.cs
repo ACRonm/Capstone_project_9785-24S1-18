@@ -54,6 +54,12 @@ using (var serviceScope = app.Services.CreateScope())
         Console.WriteLine("Seeding database");
         AddressCorrectionService addressCorrectionService = new(context);
         addresses = await addressCorrectionService.LoadAddressesFromCsvAsync(context);
+
+        // add addresses to database
+        context.Addresses.AddRange(addresses);
+        context.SaveChanges();
+
+
         Console.WriteLine("Number of addresses: " + addresses.Count);
     }
     else
